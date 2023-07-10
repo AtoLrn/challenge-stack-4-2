@@ -1,8 +1,10 @@
-name: Format Check
+name: Format
 
 on:
   pull_request:
-    branches: [main, dev]
+    branches: [main]
+  push:
+    branches: [main]
 
 jobs:
   dev-check:
@@ -22,7 +24,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: npm ci
+        run: cd app-back && npm ci
 
       - name: Launch linting
-        run: npm run lint
+        run: cd app-back && npm run lint
