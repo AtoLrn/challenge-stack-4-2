@@ -1,0 +1,22 @@
+{
+    "env": {
+        "node": true,
+        "es2021": true
+    },
+    "extends": ["eslint:recommended", "prettier"],
+    "overrides": [
+        {
+            "files": ["*.js", "*.mjs"]
+        }
+    ],
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": "latest"
+    },
+    "rules": {
+        "indent": ["error", 4, { "SwitchCase": 1 }],
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error", "double"],
+        "semi": ["error", "always"]
+    }
+}
