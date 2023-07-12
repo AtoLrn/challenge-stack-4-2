@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
+import databases from "./database/index.js";
+
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
