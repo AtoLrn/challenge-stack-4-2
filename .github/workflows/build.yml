@@ -17,7 +17,7 @@ jobs:
           node-version: 20.x
       - run: npm i
         working-directory: ./sdk
-      - run: npm run build
+      - run: VITE_API_URL=${{ secrets.VITE_API_URL_SDK }} npm run build
         working-directory: ./sdk
       - run: |
           echo "SDK_PATH=$(ls ./sdk/dist/assets/index-*.js)" >> $GITHUB_ENV
