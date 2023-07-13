@@ -4,10 +4,39 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
     <title>Vite App</title>
   </head>
   <body>
-    <div id="app" sdk-id="31f2f6abd1e2"></div>
+    <div id="app" sdk-id="31f2f6abd1e2">
+      <div>
+        <a href="https://vitejs.dev" target="_blank">
+          <img  class="logo" alt="Vite logo" />
+        </a>
+        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
+          <img  class="logo vanilla" alt="JavaScript logo" />
+        </a>
+        <h1>Hello Vite!</h1>
+        <div class="card">
+          <button id="counter" type="button" sdk-id="31f2f6abd1e2"></button>
+        </div>
+        <p class="read-the-docs">
+          Click on the Vite logo to learn more
+        </p>
+      </div>
+    </div>
+    <script>
+      function setupCounter(element) {
+      let counter = 0
+      const setCounter = (count) => {
+        counter = count
+        element.innerHTML = `count is ${counter}`
+      }
+      element.addEventListener('click', () => setCounter(counter + 1))
+      setCounter(0)
+    }
+    setupCounter(document.querySelector('#counter'))
+    </script>
     <script type="module" src="/main.js"></script>
   </body>
 </html>

@@ -5,14 +5,21 @@ import { Logging } from "../adapter/logging/logging.adapter"
 import { DeviceAdapter } from "../adapter/device/device.adapter"
 import { PageLeaveEvent } from "./events/pageLeave.event"
 import { PageViewEvent } from "./events/pageView.event"
+import { MouseEvent } from "./events/mouseMove.event"
+import { PageAdapter } from "../adapter/page/page.adapter"
 
 export class EventCatcher {
+    #secToMinFactor = 60000
     #events = []
     #user
     #device
+    #page
+
+    #lastTimeout
 
     constructor() {
         this.#user = this.#getUser()
+        this.#page = PageAdapter.getPageInfo()
         this.#device = DeviceAdapter.getDeviceInfo()
 
         const newEvent = new PageViewEvent()
@@ -27,6 +34,12 @@ export class EventCatcher {
 
         document.addEventListener('submit', (event) => {
             const newEvent = new SubmitEvent(event.target.getAttribute('sdk-id'))
+
+            this.#stackEvent(newEvent)
+        })
+
+        document.addEventListener('mousemove', (event) => {
+            const newEvent = new MouseEvent(event.clientX, event.clientY, event.target.getAttribute('sdk-id'))
 
             this.#stackEvent(newEvent)
         })
@@ -54,6 +67,17 @@ export class EventCatcher {
     }
 
     #stackEvent(triggerEvent) {
+        if (this.#lastTimeout) {
+            clearTimeout(this.#lastTimeout)
+        }
+
+        this.#lastTimeout = setTimeout(() => {
+            const newEvent = new PageLeaveEvent()
+
+            this.#stackEvent(newEvent)
+            this.#sendEvents()
+        }, 15 * this.#secToMinFactor)
+
         this.#events.push(triggerEvent)
     }
 
@@ -64,6 +88,7 @@ export class EventCatcher {
     #buildRequest() {
         return {
             user: this.#user,
+            page: this.#page,
             device: this.#device,
             event: this.#events
         }
