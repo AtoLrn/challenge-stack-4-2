@@ -1,10 +1,10 @@
 const { Router } = require("express");
 const userService = require("../services/user")
-const { encryptPassword } = require("../utils/auth")
+const { encryptPassword, checkPassword, generateToken } = require("../utils/auth")
 
 const router = Router();
 
-router.post("/register", async (req, res, next) => {
+router.post("/register", async (req, res, _) => {
     const { 
         firstname, 
         lastname, 
@@ -38,6 +38,38 @@ router.post("/register", async (req, res, next) => {
                 msg: "User created !",
                 data: createdUser
             })
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+router.post("/login", async (req, res, _) => {
+    const { email, password } = req.body
+
+    try {
+        const user = await userService.findBy({
+            email: email
+        })
+
+        if (!user) {
+            return res.status(404).send({error: "No user with this email"});
+        } else {
+            const isPasswordValid = await checkPassword(password, user.password)
+
+            if(!isPasswordValid) {
+                return res.status(401).send({error: "Wrong password"});
+            } else if(!user.isVerified){
+                return res.status(401).send({error: "User not verified"});
+            } else {
+                const token = generateToken(user)
+
+                return res.status(200).send({
+                    msg: "Successfully logged in",
+                    token: token
+                })
+            }
         }
 
     } catch (error) {
