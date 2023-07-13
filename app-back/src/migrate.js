@@ -1,6 +1,16 @@
-import { postgres } from "./database"
+const { sequelize } = require("./database");
+const mongoose = require("mongoose");
 
-postgres.sync({ force: true }).then(() => {
-    console.log("Database synchronized");
-    postgres.close();
-})
+async function runMigrations() {
+    try {
+        await sequelize.sync({ force: true });
+        console.log("Database synchronized");
+        sequelize.close();
+    } catch (error) {
+        console.error("An error occurred during database synchronization:", error);
+    } finally {
+        mongoose.disconnect();
+    }
+}
+
+runMigrations();

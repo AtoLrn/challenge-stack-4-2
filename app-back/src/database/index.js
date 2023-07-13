@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import Sequelize from "sequelize";
-import dotenv from "dotenv";
+const mongoose = require("mongoose");
+const Sequelize = require("sequelize");
+const dotenv = require("dotenv");
 
 dotenv.config();
 
@@ -13,14 +13,25 @@ mongo.once("open", () => {
     console.log("Mongo database is connected");
 });
 
-const postgres = new Sequelize(POSTGRE_DATABASE, POSTGRE_USER, POSTGRE_PASSWORD, {
+const sequelize = new Sequelize(POSTGRE_DATABASE, POSTGRE_USER, POSTGRE_PASSWORD, {
     host: POSTGRE_HOST,
     dialect: "postgres",
 });
 
+sequelize
+    .authenticate()
+    .then(() => {
+        console.log("PostgreSQL database is connected");
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+
 const databases = {
     mongo,
-    postgres,
+    sequelize,
 };
+
+databases.User = require('./models/User') (sequelize)
 
 module.exports = databases;
