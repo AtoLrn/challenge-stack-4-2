@@ -3,8 +3,8 @@ import { Event } from "./event";
 export class ClickEvent extends Event {
     #x
     #y
-    constructor(x, y, tags) {
-        super('click', tags)
+    constructor(x, y, tag) {
+        super('click', tag)
 
         this.#x = x
         this.#y = y

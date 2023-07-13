@@ -1,20 +1,42 @@
 import { UserLocalStorageAdapter } from "../adapter/user/user.adapter"
 import { User } from "./user"
-import { Event } from "./events/event"
 import { ClickEvent } from "./events/click.event"
+import { Logging } from "../adapter/logging/logging.adapter"
+import { DeviceAdapter } from "../adapter/device/device.adapter"
+import { PageLeaveEvent } from "./events/pageLeave.event"
+import { PageViewEvent } from "./events/pageView.event"
 
 export class EventCatcher {
     #events = []
     #user
+    #device
 
     constructor() {
         this.#user = this.#getUser()
+        this.#device = DeviceAdapter.getDeviceInfo()
+
+        const newEvent = new PageViewEvent()
+
+        this.#stackEvent(newEvent)
         
         document.addEventListener('click', (event) => {
-            this.#stackEvent(event)
+            const newEvent = new ClickEvent(event.clientX, event.clientY, event.target.getAttribute('sdk-id'))
+
+            this.#stackEvent(newEvent)
         })
 
-        window.onbeforeunload = () => this.#sendEvents();
+        document.addEventListener('submit', (event) => {
+            const newEvent = new SubmitEvent(event.target.getAttribute('sdk-id'))
+
+            this.#stackEvent(newEvent)
+        })
+
+        window.onbeforeunload = () => {
+            const newEvent = new PageLeaveEvent()
+
+            this.#stackEvent(newEvent)
+            this.#sendEvents()
+        };
     }
 
     #getUser() {
@@ -32,19 +54,17 @@ export class EventCatcher {
     }
 
     #stackEvent(triggerEvent) {
-        const event = new ClickEvent(triggerEvent.clientX, triggerEvent.clientY, triggerEvent.target.getAttribute('sdk-id'))
-        this.#events.push(event)
-        console.log(JSON.stringify(this.#buildRequest()))
+        this.#events.push(triggerEvent)
     }
 
     #sendEvents() {
-        console.log(JSON.stringify(this.#events))
-        return null
+        Logging.pusblish(this.#buildRequest())
     }
 
     #buildRequest() {
         return {
             user: this.#user,
+            device: this.#device,
             event: this.#events
         }
     }

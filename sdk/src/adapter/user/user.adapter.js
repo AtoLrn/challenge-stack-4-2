@@ -10,12 +10,15 @@ export class UserLocalStorageAdapter {
      */
     static getUser() {
         const item = JSON.parse(localStorage.getItem(UserLocalStorageAdapter.LOCAL_STORAGE_KEY))
-        console.log(item)
+
         if (item) {
             const bundle = new Bundle(item, UserLocalStorageAdapter.LOCAL_STORAGE_KEY)
 
+            this.saveUser({ ...bundle.data, lastVisit: new Date() })
+
             return User.toEntities(bundle.data)
         }
+
     }
 
 

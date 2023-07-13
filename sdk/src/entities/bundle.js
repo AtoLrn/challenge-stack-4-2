@@ -13,7 +13,6 @@ export class Bundle {
 
 
     #save() {
-        console.log(this)
         localStorage.setItem(this.#key, JSON.stringify(this))
     }
 

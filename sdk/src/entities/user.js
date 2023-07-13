@@ -1,3 +1,5 @@
+import { v4 as uuid } from 'uuid'
+
 export class User {
     #id
     #firstVisit
@@ -7,7 +9,7 @@ export class User {
         if (id) {
             this.#id = id
         } else {
-            this.#id = 'randomly-generated'
+            this.#id = uuid()
         }
 
         if (firstVisit) {

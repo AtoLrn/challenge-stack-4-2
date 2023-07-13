@@ -1,14 +1,14 @@
 export class Event {
-    constructor(eventType, tags) {
+    constructor(eventType, tag) {
         this.eventType = eventType
-        this.tags = tags
+        this.tag = tag
         this.triggerTime = new Date()
     }
 
     toJSON() {
         return {
             kind: this.eventType,
-            tags: this.tags?? [],
+            tag: this.tag?? undefined,
             time: this.triggerTime.getTime()
         }
     }
