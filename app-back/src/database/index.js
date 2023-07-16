@@ -1,22 +1,24 @@
-const mongoose = require("mongoose");
-const Sequelize = require("sequelize");
-const dotenv = require("dotenv");
+import mongoose from "mongoose";
+import Sequelize from "sequelize";
+import User from "./models/User.js";
+import { config } from "../env.js";
 
-dotenv.config();
-
-const { MONGO_URL, POSTGRE_HOST, POSTGRE_USER, POSTGRE_PASSWORD, POSTGRE_DATABASE } = process.env;
-
-mongoose.connect(MONGO_URL);
+mongoose.connect(config.db.mongo_url);
 const mongo = mongoose.connection;
 
 mongo.once("open", () => {
     console.log("Mongo database is connected");
 });
 
-const sequelize = new Sequelize(POSTGRE_DATABASE, POSTGRE_USER, POSTGRE_PASSWORD, {
-    host: POSTGRE_HOST,
-    dialect: "postgres",
-});
+const sequelize = new Sequelize(
+    config.db.postgre_database,
+    config.db.postgre_user,
+    config.db.postgre_password,
+    {
+        host: config.postgre_host,
+        dialect: "postgres",
+    }
+);
 
 sequelize
     .authenticate()
@@ -32,6 +34,6 @@ const databases = {
     sequelize,
 };
 
-databases.User = require('./models/User') (sequelize)
+databases.User = User(sequelize);
 
-module.exports = databases;
+export default databases;

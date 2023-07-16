@@ -1,11 +1,11 @@
-const { sequelize } = require("./database");
-const mongoose = require("mongoose");
+import databases from "./database/index.js";
+import mongoose from "mongoose";
 
 async function runMigrations() {
     try {
-        await sequelize.sync({ force: true });
+        await databases.sequelize.sync({ force: true });
         console.log("Database synchronized");
-        sequelize.close();
+        databases.sequelize.close();
     } catch (error) {
         console.error("An error occurred during database synchronization:", error);
     } finally {

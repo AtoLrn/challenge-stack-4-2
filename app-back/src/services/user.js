@@ -1,18 +1,26 @@
-const { User } = require("../database/index");
-console.log(User)
+import databases from "../database/index.js";
 
-module.exports = {
-    findBy: async function (criteria, option = {}) {
-        return User.findOne({
+const User = databases.User;
+
+class Userservice {
+    constructor(userModel) {
+        this.User = userModel;
+    }
+
+    async findBy(criteria, option = {}) {
+        return this.User.findOne({
             where: criteria,
-            ...option
-        })
-    },
-    create: async function (data) {
+            ...option,
+        });
+    }
+
+    async create(data) {
         try {
-            return await User.create(data);
+            return await this.User.create(data);
         } catch (e) {
             throw e;
         }
-  },
+    }
 }
+
+export const userService = new Userservice(User);

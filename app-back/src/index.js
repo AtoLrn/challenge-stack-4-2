@@ -1,9 +1,10 @@
-const express = require("express")
-const cors = require("cors")
-const dotenv = require("dotenv")
+import express from "express";
+import cors from "cors";
+import { config } from "./env.js";
 
-dotenv.config();
-const PORT = process.env.PORT || 3000;
+import authRouter from "./routes/auth.js";
+
+const PORT = config.port || 3000;
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.get("/", (_, res) => {
     res.send("Hello world");
 });
 
-app.use("/auth", require("./routes/auth"))
+app.use("/auth", authRouter);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
