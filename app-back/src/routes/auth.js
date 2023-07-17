@@ -1,11 +1,25 @@
 import { Router } from "express";
 import { userService } from "../services/user.js";
 import { encryptPassword, checkPassword, generateToken } from "../utils/auth.js";
+import multer from "multer";
+import ovh from "ovh";
+import { config } from "../env.js";
 
 const authRouter = Router();
 
-authRouter.post("/register", async (req, res, _) => {
-    const { firstname, lastname, email, password, societyName, websiteUrl } = req.body;
+//const client = ovh({
+//endpoint: config.ovh.endpoint,
+//appKey: config.ovh.appKey,
+//appSecret: config.ovh.appSecret,
+//consumerKey: config.ovh.consumerKey,
+//})
+
+const upload = multer({
+    storage: multer.memoryStorage(),
+});
+
+authRouter.post("/register", upload.single("kbisFile"), async (req, res, _) => {
+    const { firstname, lastname, email, password, societyName, kbisFile, websiteUrl } = req.body;
 
     try {
         const user = await userService.findBy({
@@ -15,6 +29,10 @@ authRouter.post("/register", async (req, res, _) => {
         if (user) {
             return res.status(409).send({ error: "Email already taken" });
         }
+
+        //if(!kbisFile){
+        //return res.status(400).send({ error: "File needed for the kbis" });
+        //}
 
         const encryptedPassword = await encryptPassword(password);
 
@@ -27,14 +45,25 @@ authRouter.post("/register", async (req, res, _) => {
             societyName,
             websiteUrl,
             kbisFileUrl: "dummy",
+            role: 2,
         });
+
+        //const uploadResult = await client.requestPromised(
+        //"POST",
+        //"url",
+        //{
+        //serviceName: "service name",
+        //containerName: "container name",
+        //data: req.file.buffer
+        //}
+        //)
 
         return res.status(200).send({
             msg: "User created !",
             data: createdUser,
         });
     } catch (error) {
-        console.log(error);
+        return res.status(400).send({ error: error });
     }
 });
 
@@ -65,7 +94,7 @@ authRouter.post("/login", async (req, res, _) => {
             token: token,
         });
     } catch (error) {
-        console.log(error);
+        return res.status(400).send({ error: error });
     }
 });
 

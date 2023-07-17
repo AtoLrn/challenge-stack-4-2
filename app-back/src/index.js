@@ -3,6 +3,7 @@ import cors from "cors";
 import { config } from "./env.js";
 
 import authRouter from "./routes/auth.js";
+import userRouter from "./routes/user.js";
 
 const PORT = config.port || 3000;
 
@@ -17,6 +18,7 @@ app.get("/", (_, res) => {
 });
 
 app.use("/auth", authRouter);
+app.use("/user", userRouter);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
