@@ -14,12 +14,19 @@ class Userservice {
         });
     }
 
+    async findAll() {
+        return this.User.findAll();
+    }
+
     async create(data) {
-        try {
-            return await this.User.create(data);
-        } catch (e) {
-            throw e;
-        }
+        return await this.User.create(data);
+    }
+
+    async update(criteria, data) {
+        return await this.User.update(data, {
+            where: criteria,
+            returning: true,
+        });
     }
 }
 

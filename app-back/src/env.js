@@ -12,4 +12,10 @@ export const config = {
         postgre_password: process.env.POSTGRE_PASSWORD,
         postgre_database: process.env.POSTGRE_DATABASE,
     },
+    ovh: {
+        endpoint: process.env.OVH_ENDPOINT,
+        appKey: process.env.OVH_APP_KEY,
+        appSecret: process.env.OVH_APP_SECRET,
+        consumerKey: process.env.OVH_CONSUMER_KEY,
+    },
 };

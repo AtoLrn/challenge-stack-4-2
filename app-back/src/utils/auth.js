@@ -7,9 +7,13 @@ export async function checkPassword(password, toCheck) {
 }
 
 export function generateToken(user) {
-    return jwt.sign({ id: user.id }, config.jwt_secret, {
+    return jwt.sign({ userId: user.id }, config.jwt_secret, {
         expiresIn: "1y",
     });
+}
+
+export function verifyToken(token) {
+    return jwt.verify(token, config.jwt_secret);
 }
 
 export async function encryptPassword(password) {
