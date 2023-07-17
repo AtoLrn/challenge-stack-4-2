@@ -9,7 +9,9 @@
         <p class="description">{{ goodie.description }}</p>
         <div class="card-bottom">
           <p class="price">{{ goodie.price }} €</p>
-          <button class="btn btn-sm">Réserver</button>
+          <button class="btn btn-sm"  @click="toggleReservation(goodie)">
+            {{ goodie.reserved ? 'Ne plus réserver ):' : 'Réserver !' }}
+          </button>
         </div>
       </div>
     </div>
@@ -20,6 +22,7 @@
 <script>
 
 export default {
+
   data() {
     return {
       goodies: [
@@ -28,47 +31,60 @@ export default {
           title: 'Boîte de poussins doux',
           description: 'Une armée de poussins jaune, rien que pour vous.',
           price: '25',
+          reserved: false,
         },
         {
           picture: '/src/assets/img/bag.png',
           title: 'Sac à dos chicken',
           description: 'Un super sac à dos pour emporter plein de trucs.',
           price: '30',
-        },
-        {
-          picture: '/src/assets/img/mug.jpeg',
-          title: 'Mug jaune pas ouf',
-          description: 'Un mug jaune pour boire vos meilleurs breuvage.',
-          price: '15',
-        },
-        {
-          picture: '/src/assets/img/pencilcase.png',
-          title: 'Trousse à trucs',
-          description: 'Une trousse de voyage bien jaune, bien poussin.',
-          price: '15',
+          reserved: false,
         },
         {
           picture: '/src/assets/img/plush.png',
           title: 'Peluche poussin tueur',
           description: 'Une super peluche poussin pour un peu plus de douceur dans ce monde de brutes.',
           price: '20',
+          reserved: false,
+        },
+        {
+          picture: '/src/assets/img/pencilcase.png',
+          title: 'Trousse à trucs',
+          description: 'Une trousse de voyage bien jaune, bien poussin.',
+          price: '15',
+          reserved: false,
         },
         {
           picture: '/src/assets/img/shirt.jpeg',
           title: 'Chemise classe mais un peu moche',
           description: 'Une chemise poussin carrément classe pour les grandes occasions.',
           price: '40',
-        }
-      ],
+          reserved: false,
+        },
+        {
+          picture: '/src/assets/img/mug.jpeg',
+          title: 'Mug jaune pas ouf',
+          description: 'Un mug jaune pour boire vos meilleurs breuvages.',
+          price: '15',
+          reserved: false,
+        },
+      ]
     };
   },
+
+  methods: {
+    toggleReservation(goodie) {
+      goodie.reserved = !goodie.reserved;
+    },
+  }
+
 };
 
 
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 
 #container {

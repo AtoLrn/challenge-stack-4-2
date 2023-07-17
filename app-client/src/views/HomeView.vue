@@ -3,7 +3,7 @@
     <div>
       <div id="text-container">
         <div>
-          <h1 class="title">Faites honneur à votre passion pour les canards !</h1>
+          <h1 class="title">QuackMart !</h1>
           <p>
             Bienvenue chez Quackmart, le paradis des amoureux des canards ! <br>
             Plongez dans notre vaste collection de goodies à l'effigie de ces adorables créatures à plumes.
