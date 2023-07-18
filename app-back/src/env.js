@@ -4,6 +4,7 @@ import nodemailer from "nodemailer";
 dotenv.config();
 
 export const config = {
+    adminEmail: process.env.ADMIN_EMAIL,
     adminPassword: process.env.ADMIN_PASSWORD,
     port: process.env.PORT,
     jwt_secret: process.env.JWT_SECRET,

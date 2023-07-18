@@ -20,6 +20,7 @@ export const checkAuth = (needAdmin) => async (req, res, next) => {
         if (needAdmin && user.role != 1) {
             return res.status(403).send({ error: "Higher privileges needed" });
         }
+        req.user = user
 
         next();
     }

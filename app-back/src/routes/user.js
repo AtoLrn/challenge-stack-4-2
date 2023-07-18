@@ -57,4 +57,22 @@ userRouter.post("/verify/:id", checkAuth(true), async (req, res) => {
     }
 });
 
+userRouter.get("/:id", checkAuth(false), async (req, res) => {
+    try {
+        // Can't get user if it's not you and your not admin
+        if(req.user.role != 1 && req.user.id != req.params.id) {
+            return res.status(403).send({ error: "Higher privileges needed" });
+        }
+
+        const user = await userService.findBy({
+            id: req.params.id,
+        });
+
+        return res.status(200).send({ data: user })
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send({ error: error });
+    }
+})
+
 export default userRouter;
