@@ -58,6 +58,19 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res, _) => {
         //}
         //)
 
+        const mail = {
+            from: config.gmail.user,
+            to: email,
+            subject: "Account created !",
+            text: "Your account has been successfully created ! You now have to wait for an admin to verify your account."
+        }
+
+        config.gmail.transporter.sendMail(mail, (error) => {
+            if(error) {
+                throw error
+            }
+        })
+
         return res.status(200).send({
             msg: "User created !",
             data: createdUser,

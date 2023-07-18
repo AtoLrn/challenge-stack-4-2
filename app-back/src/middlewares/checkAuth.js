@@ -5,7 +5,7 @@ export const checkAuth = (needAdmin) => async (req, res, next) => {
     const token = req.headers.authorization;
 
     if (!token) {
-        res.status(401).send({ error: "Token needed" });
+        return res.status(401).send({ error: "Token needed" });
     } else {
         const decoded = verifyToken(token);
 
@@ -13,8 +13,12 @@ export const checkAuth = (needAdmin) => async (req, res, next) => {
             id: decoded.userId,
         });
 
+        if (!user) {
+            return res.status(401).send({ error: "Your token seem wrong" });
+        }
+
         if (needAdmin && user.role != 1) {
-            res.status(403).send({ error: "Higher privileges needed" });
+            return res.status(403).send({ error: "Higher privileges needed" });
         }
 
         next();

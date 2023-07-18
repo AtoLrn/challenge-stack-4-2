@@ -1,8 +1,10 @@
 import dotenv from "dotenv";
+import nodemailer from "nodemailer";
 
 dotenv.config();
 
 export const config = {
+    adminPassword: process.env.ADMIN_PASSWORD,
     port: process.env.PORT,
     jwt_secret: process.env.JWT_SECRET,
     db: {
@@ -18,4 +20,16 @@ export const config = {
         appSecret: process.env.OVH_APP_SECRET,
         consumerKey: process.env.OVH_CONSUMER_KEY,
     },
+    gmail: {
+        user: process.env.GMAIL_USER,
+        transporter: nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
+            auth: {
+                user: process.env.GMAIL_USER,
+                pass: process.env.GMAIL_PASSWORD
+            }
+        })
+    }
 };
