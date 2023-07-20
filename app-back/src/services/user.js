@@ -28,6 +28,12 @@ class Userservice {
             returning: true,
         });
     }
+
+    async delete(criteria) {
+        return await this.User.destroy({
+            where: criteria,
+        })
+    }
 }
 
 export const userService = new Userservice(User);

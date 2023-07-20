@@ -75,4 +75,25 @@ userRouter.get("/:id", checkAuth(false), async (req, res) => {
     }
 })
 
+userRouter.delete("/:id", checkAuth(false), async (req, res) => {
+    try {
+        // Can't delete user if it's not you and your not admin
+        if(req.user.role != 1 && req.user.id != req.params.id) {
+            return res.status(403).send({ error: "Higher privileges needed" });
+        }
+
+        const deletedUser = await userService.delete({
+            id: req.params.id,
+        });
+
+        return res.status(200).send({ 
+            msg: `User ${req.params.id} deleted !`,
+            data: deletedUser
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send({ error: error });
+    }
+})
+
 export default userRouter;
