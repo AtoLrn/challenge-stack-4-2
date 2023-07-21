@@ -21,9 +21,11 @@
         "jsonwebtoken": "^9.0.1",
         "mongoose": "^7.3.2",
         "multer": "^1.4.5-lts.1",
+        "nodemailer": "^6.9.4",
         "ovh": "^2.0.3",
         "pg": "^8.11.1",
-        "sequelize": "^6.32.1"
+        "sequelize": "^6.32.1",
+        "typanion": "^3.13.0"
     },
     "devDependencies": {
         "eslint": "^8.44.0",
