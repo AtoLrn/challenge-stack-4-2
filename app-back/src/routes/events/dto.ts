@@ -57,5 +57,5 @@ export const EventSchema = T.isObject({
                 type: T.isString()
             })) 
     }),
-    events: T.isArray(T.isOneOf([mouseEvent, mouseMovementEvent, pageViewEvent, pageLeaveEvent]))
+    events: T.isArray(T.isOneOf([mouseEvent, mouseMovementEvent, pageViewEvent, pageLeaveEvent, submitEvent]))
 })
