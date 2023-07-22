@@ -2,10 +2,13 @@ import { Router } from "express";
 import { userService } from "../services/user.js";
 import { checkAuth } from "../middlewares/checkAuth.js";
 import { config } from "../env.js";
+import { requestTiming } from "../monitoring/index.js";
 
 const userRouter = Router();
 
 userRouter.get("/", checkAuth(true), async (_, res) => {
+    const end = requestTiming.labels({ path: "get_users" }).startTimer();
+
     try {
         const users = await userService.findAll();
 
@@ -14,6 +17,8 @@ userRouter.get("/", checkAuth(true), async (_, res) => {
         });
     } catch (error) {
         return res.status(400).send({ error: error });
+    } finally {
+        end();
     }
 });
 
@@ -32,20 +37,20 @@ userRouter.post("/verify/:id", checkAuth(true), async (req, res) => {
                 id: req.params.id,
             },
             { isVerified: true }
-        )
+        );
 
         const mail = {
             from: config.gmail.user,
             to: user.email,
             subject: "Account verified !",
-            text: "Your account has been successfully verified ! You can now use the analytics tool."
+            text: "Your account has been successfully verified ! You can now use the analytics tool.",
         };
 
         config.gmail.transporter.sendMail(mail, (error) => {
-            if(error) {
-                throw error
+            if (error) {
+                throw error;
             }
-        })
+        });
 
         return res.status(200).send({
             msg: `user ${user.id} Successfully verified`,
@@ -60,7 +65,7 @@ userRouter.post("/verify/:id", checkAuth(true), async (req, res) => {
 userRouter.get("/:id", checkAuth(false), async (req, res) => {
     try {
         // Can't get user if it's not you and your not admin
-        if(req.user.role != 1 && req.user.id != req.params.id) {
+        if (req.user.role != 1 && req.user.id != req.params.id) {
             return res.status(403).send({ error: "Higher privileges needed" });
         }
 
@@ -68,17 +73,17 @@ userRouter.get("/:id", checkAuth(false), async (req, res) => {
             id: req.params.id,
         });
 
-        return res.status(200).send({ data: user })
+        return res.status(200).send({ data: user });
     } catch (error) {
         console.log(error);
         return res.status(400).send({ error: error });
     }
-})
+});
 
 userRouter.delete("/:id", checkAuth(false), async (req, res) => {
     try {
         // Can't delete user if it's not you and your not admin
-        if(req.user.role != 1 && req.user.id != req.params.id) {
+        if (req.user.role != 1 && req.user.id != req.params.id) {
             return res.status(403).send({ error: "Higher privileges needed" });
         }
 
@@ -86,14 +91,14 @@ userRouter.delete("/:id", checkAuth(false), async (req, res) => {
             id: req.params.id,
         });
 
-        return res.status(200).send({ 
+        return res.status(200).send({
             msg: `User ${req.params.id} deleted !`,
-            data: deletedUser
-        })
+            data: deletedUser,
+        });
     } catch (error) {
         console.log(error);
         return res.status(400).send({ error: error });
     }
-})
+});
 
 export default userRouter;

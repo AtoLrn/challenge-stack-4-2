@@ -32,7 +32,7 @@ class Userservice {
     async delete(criteria) {
         return await this.User.destroy({
             where: criteria,
-        })
+        });
     }
 }
 

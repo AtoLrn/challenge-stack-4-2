@@ -2,8 +2,9 @@ import { Router } from "express";
 import { userService } from "../services/user.js";
 import { encryptPassword, checkPassword, generateToken } from "../utils/auth.js";
 import multer from "multer";
-import ovh from "ovh";
+// import ovh from "ovh";
 import { config } from "../env.js";
+import { requestTiming } from "../monitoring/index.js";
 
 const authRouter = Router();
 
@@ -18,8 +19,18 @@ const upload = multer({
     storage: multer.memoryStorage(),
 });
 
-authRouter.post("/register", upload.single("kbisFile"), async (req, res, _) => {
-    const { firstname, lastname, email, password, societyName, kbisFile, websiteUrl } = req.body;
+authRouter.post("/register", upload.single("kbisFile"), async (req, res) => {
+    const end = requestTiming.labels({ path: "register" }).startTimer();
+
+    const { 
+        firstname, 
+        lastname, 
+        email, 
+        password, 
+        societyName, 
+        // kbisFile, 
+        websiteUrl 
+    } = req.body;
 
     try {
         const user = await userService.findBy({
@@ -62,14 +73,14 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res, _) => {
             from: config.gmail.user,
             to: email,
             subject: "Account created !",
-            text: "Your account has been successfully created ! You now have to wait for an admin to verify your account."
-        }
+            text: "Your account has been successfully created ! You now have to wait for an admin to verify your account.",
+        };
 
         config.gmail.transporter.sendMail(mail, (error) => {
-            if(error) {
-                throw error
+            if (error) {
+                throw error;
             }
-        })
+        });
 
         return res.status(200).send({
             msg: "User created !",
@@ -77,10 +88,14 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res, _) => {
         });
     } catch (error) {
         return res.status(400).send({ error: error });
+    } finally {
+        end();
     }
 });
 
-authRouter.post("/login", async (req, res, _) => {
+authRouter.post("/login", async (req, res) => {
+    const end = requestTiming.labels({ path: "login" }).startTimer();
+
     const { email, password } = req.body;
 
     try {
@@ -108,6 +123,8 @@ authRouter.post("/login", async (req, res, _) => {
         });
     } catch (error) {
         return res.status(400).send({ error: error });
+    } finally {
+        end();
     }
 });
 
