@@ -24,6 +24,7 @@
         "nodemailer": "^6.9.4",
         "ovh": "^2.0.3",
         "pg": "^8.11.1",
+        "prom-client": "^14.2.0",
         "sequelize": "^6.32.1",
         "typanion": "^3.13.0"
     },
