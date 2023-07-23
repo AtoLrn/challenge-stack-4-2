@@ -25,8 +25,8 @@ const User = (sequelize) => {
         kbisFileUrl: DataTypes.STRING,
         websiteUrl: DataTypes.STRING,
         isVerified: DataTypes.BOOLEAN,
-        role: DataTypes.INTEGER,
-        //1 = admin, 2 = webmaster
+        role: DataTypes.INTEGER, //1 = admin, 2 = webmaster
+        appId: DataTypes.STRING,
     });
 };
 

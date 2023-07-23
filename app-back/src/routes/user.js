@@ -3,6 +3,7 @@ import { userService } from "../services/user.js";
 import { checkAuth } from "../middlewares/checkAuth.js";
 import { config } from "../env.js";
 import { requestTiming } from "../monitoring/index.js";
+import crypto from "crypto";
 
 const userRouter = Router();
 
@@ -55,6 +56,31 @@ userRouter.post("/verify/:id", checkAuth(true), async (req, res) => {
         return res.status(200).send({
             msg: `user ${user.id} Successfully verified`,
             data: updatedUser,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send({ error: error });
+    }
+});
+
+userRouter.get("/:id/app-id", checkAuth(false), async (req, res) => {
+    //generate new app id
+    try {
+        if (req.user.role != 1 && req.user.id != req.params.id) {
+            return res.status(403).send({ error: "Higher privileges needed" });
+        }
+
+        const appId = crypto.randomBytes(15).toString("hex");
+        await userService.update(
+            {
+                id: req.params.id,
+            },
+            { appId }
+        );
+
+        return res.status(200).send({
+            msg: "There is your new app id",
+            data: appId,
         });
     } catch (error) {
         console.log(error);
