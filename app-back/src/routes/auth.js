@@ -2,48 +2,57 @@ import { Router } from "express";
 import { userService } from "../services/user.js";
 import { encryptPassword, checkPassword, generateToken } from "../utils/auth.js";
 import multer from "multer";
-// import ovh from "ovh";
 import { config } from "../env.js";
 import { requestTiming } from "../monitoring/index.js";
+import { v4 as uuid } from "uuid";
+import AWS from "aws-sdk";
 
 const authRouter = Router();
-
-//const client = ovh({
-//endpoint: config.ovh.endpoint,
-//appKey: config.ovh.appKey,
-//appSecret: config.ovh.appSecret,
-//consumerKey: config.ovh.consumerKey,
-//})
 
 const upload = multer({
     storage: multer.memoryStorage(),
 });
 
+AWS.config.update({
+    accessKeyId: config.ovh.accessKey,
+    secretAccessKey: config.ovh.secretKey,
+    endpoint: config.ovh.endpoint,
+    s3ForcePathStyle: true,
+});
+
+const s3 = new AWS.S3();
+
 authRouter.post("/register", upload.single("kbisFile"), async (req, res) => {
     const end = requestTiming.labels({ path: "register" }).startTimer();
 
-    const { 
-        firstname, 
-        lastname, 
-        email, 
-        password, 
-        societyName, 
-        // kbisFile, 
-        websiteUrl 
-    } = req.body;
+    const { firstname, lastname, email, password, societyName, websiteUrl } = req.body;
 
     try {
         const user = await userService.findBy({
             email: email,
         });
 
-        if (user) {
-            return res.status(409).send({ error: "Email already taken" });
-        }
+        if (user) return res.status(409).send({ error: "Email already taken" });
 
-        //if(!kbisFile){
-        //return res.status(400).send({ error: "File needed for the kbis" });
-        //}
+        if (!req.file) return res.status(400).send({ error: "File needed for the kbis" });
+
+        if (req.file.mimetype !== "application/pdf")
+            return res.status(400).send({ error: "The file must be pdf" });
+
+        const fileName = `${uuid()}.pdf`;
+        const uploadParams = {
+            Bucket: "challenge-stack",
+            Key: fileName,
+            Body: req.file.buffer,
+        };
+
+        s3.upload(uploadParams, (err) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).send({ error: "Error while uploading file" });
+            }
+            console.log("Data successfully sent");
+        });
 
         const encryptedPassword = await encryptPassword(password);
 
@@ -55,19 +64,9 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res) => {
             isVerified: false,
             societyName,
             websiteUrl,
-            kbisFileUrl: "dummy",
+            kbisFileUrl: `https://challenge-stack.s3.gra.io.cloud.ovh.net/${fileName}`,
             role: 2,
         });
-
-        //const uploadResult = await client.requestPromised(
-        //"POST",
-        //"url",
-        //{
-        //serviceName: "service name",
-        //containerName: "container name",
-        //data: req.file.buffer
-        //}
-        //)
 
         const mail = {
             from: config.gmail.user,

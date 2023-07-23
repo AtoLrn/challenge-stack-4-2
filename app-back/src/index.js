@@ -45,7 +45,6 @@ const admin = await userService.findBy({
 if (!admin) {
     console.log("No admin account existing, creating one...");
     try {
-        console.log(config.adminPassword);
         const password = await encryptPassword(config.adminPassword);
         await userService.create({
             firstname: "admin",

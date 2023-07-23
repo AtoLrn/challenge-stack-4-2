@@ -10,11 +10,28 @@
     <main>
         <h1>upload</h1>  
         <input type="file" id="file">
+        <input type="button" value="send" id="send">
     </main>
 	<script>
         const file = document.getElementById("file")
+        const button = document.getElementById("send")
 
-        console.log(file)
+        button.addEventListener("click", () => {
+            const formData = new FormData()
+
+            formData.append("firstname", "lucas")
+            formData.append("lastname", "campistron")
+            formData.append("email", "lucascampistr@gmail.com")
+            formData.append("password", "lucas")
+            formData.append("societyName", "lucas")
+            formData.append("websiteUrl", "lucas.fr")
+            formData.append("kbisFile", file.files[0])
+
+            fetch("http://127.0.0.1:3000/auth/register", {
+                method: "POST",
+                body: formData
+            })
+        })
     </script>
   </body>
 </html>
