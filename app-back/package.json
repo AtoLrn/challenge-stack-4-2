@@ -14,6 +14,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "aws-sdk": "^2.1420.0",
         "bcryptjs": "^2.4.3",
         "cors": "^2.8.5",
         "dotenv": "^16.3.1",
@@ -22,11 +23,11 @@
         "mongoose": "^7.3.2",
         "multer": "^1.4.5-lts.1",
         "nodemailer": "^6.9.4",
-        "ovh": "^2.0.3",
         "pg": "^8.11.1",
         "prom-client": "^14.2.0",
         "sequelize": "^6.32.1",
-        "typanion": "^3.13.0"
+        "typanion": "^3.13.0",
+        "uuid": "^9.0.0"
     },
     "devDependencies": {
         "eslint": "^8.44.0",
