@@ -1,0 +1,64 @@
+/* color palette from <https://github.com/vuejs/theme> */
+:root {
+
+  --white: #ffffff;
+  --purple: #8B4BF2;
+  --indigo: #5B5DF0;
+
+  --gradient-light: linear-gradient(180deg, rgba(232.69, 232.69, 232.69, 0) 0%, #ECDEF8 100%);
+  --gradient-dark: linear-gradient(180deg, #8C4AF2 0%, #5A5DF0 100%);
+
+  --divider: #BEBFBE;
+  --text: #717372;
+
+  --font-title: 'Poppins', sans-serif;
+
+  --shadow: 4px 4px 4px rgba(86, 144, 198, 0.11), 8px 8px 40px rgba(125, 153, 180, 0.2);
+  --shadow-hover: 12px 12px 8px rgba(86, 144, 198, 0.2), 10px 10px 80px rgba(92, 121, 148, 0.2);
+
+  --radius-small: 4px;
+  --radius-medium: 8px;
+
+  --transition: all 0.2s ease-in-out;
+}
+
+/* semantic color variables for this project */
+:root {
+  --color-background: var(--gradient-light);
+
+  --color-border: var(--divider);
+  --color-border-hover: var(--indigo);
+
+  --color-heading: var(--purple);
+  --color-text: var(--text);
+
+  --section-gap: 160px;
+}
+
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+a {
+  text-decoration: unset;
+}
+
+
+body {
+  min-height: 100vh;
+  color: var(--color-text);
+  background: var(--color-background);
+  transition: color 0.5s, background-color 0.5s;
+  line-height: 1.6;
+  font-family: 'Helvetica Neue', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Fira Sans', 'Droid Sans', sans-serif;
+  font-size: 14px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

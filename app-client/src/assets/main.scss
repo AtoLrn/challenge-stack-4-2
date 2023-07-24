@@ -1,0 +1,51 @@
+@import 'base.scss';
+
+
+.title {
+  color: var(--purple);
+  font-family: var(--font-title);
+}
+
+.btn {
+  background-color: var(--indigo);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-small);
+  transition: var(--transition);
+
+  &-sm {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  &md {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+
+  &-lg {
+    font-size: 16px;
+    padding: 8px 16px;
+  }
+
+  &:hover {
+    background-color: var(--purple);
+  }
+}
+
+
+input {
+  border: 0.75px solid var(--divider);
+  border-radius: var(--radius-small);
+  transition: all 0.2s ease-in-out;
+  color: var(--purple);
+
+  &:hover {
+    border: 0.75px solid var(--purple);
+  }
+
+  &:focus {
+    border: 0.75px solid var(--indigo);
+    outline: none;
+  }
+}
