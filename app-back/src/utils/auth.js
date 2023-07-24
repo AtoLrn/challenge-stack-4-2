@@ -6,8 +6,8 @@ export async function checkPassword(password, toCheck) {
     return bcrypt.compare(password, toCheck);
 }
 
-export function generateToken(user) {
-    return jwt.sign({ userId: user.id }, config.jwt_secret, {
+export function generateToken(userId) {
+    return jwt.sign({ userId: userId }, config.jwt_secret, {
         expiresIn: "1y",
     });
 }

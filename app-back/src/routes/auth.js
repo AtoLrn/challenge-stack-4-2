@@ -116,7 +116,7 @@ authRouter.post("/login", async (req, res) => {
             return res.status(401).send({ error: "User not verified" });
         }
 
-        const token = generateToken(user);
+        const token = generateToken(user.id);
 
         return res.status(200).send({
             msg: "Successfully logged in",

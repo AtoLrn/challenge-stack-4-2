@@ -13,7 +13,7 @@ import { tagRouter } from "./routes/tag.js";
 
 const PORT = config.port || 3000;
 
-const app = express();
+export const app = express();
 
 // middlewares
 // app.use(cors());
