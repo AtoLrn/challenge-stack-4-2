@@ -1,6 +1,6 @@
 import { app } from "../../src/index.js";
 import request from "supertest";
-import { userService } from "../../src/services/user.js"
+import { userService } from "../../src/services/user.js";
 
 jest.mock("../../src/services/user.js", () => ({
     findBy: jest.fn(),
