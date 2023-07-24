@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 
-const User = (sequelize) => {
+export const User = (sequelize) => {
     return sequelize.define("users", {
         firstname: DataTypes.STRING,
         lastname: DataTypes.STRING,
@@ -27,7 +27,6 @@ const User = (sequelize) => {
         isVerified: DataTypes.BOOLEAN,
         role: DataTypes.INTEGER, //1 = admin, 2 = webmaster
         appId: DataTypes.STRING,
+        dashboardOptions: DataTypes.JSON,
     });
 };
-
-export default User;

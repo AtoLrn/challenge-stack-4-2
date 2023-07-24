@@ -23,10 +23,11 @@ class Userservice {
     }
 
     async update(criteria, data) {
-        return await this.User.update(data, {
+        const [, user = []] = await this.User.update(data, {
             where: criteria,
             returning: true,
         });
+        return user[0];
     }
 
     async delete(criteria) {
