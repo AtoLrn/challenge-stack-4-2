@@ -16,7 +16,7 @@ const sequelize = new Sequelize(
     config.db.postgre_user,
     config.db.postgre_password,
     {
-        host: config.postgre_host,
+        host: config.db.postgre_host,
         dialect: "postgres",
     }
 );

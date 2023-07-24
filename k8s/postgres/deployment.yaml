@@ -21,6 +21,8 @@ spec:
           value: postgres
         - name: POSTGRES_PASSWORD
           value: example
+        - name: POSTGRES_DB
+          value: app
         resources:
           requests:
             cpu: "128m"
