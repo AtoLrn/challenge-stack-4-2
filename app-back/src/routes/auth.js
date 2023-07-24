@@ -44,6 +44,7 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res) => {
             Bucket: "challenge-stack",
             Key: fileName,
             Body: req.file.buffer,
+            ACL:"public-read"
         };
 
         s3.upload(uploadParams, (err) => {
