@@ -90,7 +90,7 @@ export class EventCatcher {
             user: this.#user,
             page: this.#page,
             device: this.#device,
-            event: this.#events
+            events: this.#events
         }
     }
 }

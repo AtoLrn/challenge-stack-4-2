@@ -9,32 +9,32 @@ const mouseEvent = T.isObject({
     ...baseEvent,
     x: T.isNumber(),
     y: T.isNumber(),
-    type: T.isLiteral("click"),
+    kind: T.isLiteral("click"),
 });
 
 const mouseMovementEvent = T.isObject({
     ...baseEvent,
     x: T.isNumber(),
     y: T.isNumber(),
-    type: T.isLiteral("mouse-movement"),
+    kind: T.isLiteral("mouse-movement"),
 });
 
 const submitEvent = T.isObject({
     ...baseEvent,
-    type: T.isLiteral("submit"),
+    kind: T.isLiteral("submit"),
 });
 
 const pageViewEvent = T.isObject({
     ...baseEvent,
-    type: T.isLiteral("page-view"),
+    kind: T.isLiteral("page-view"),
 });
 
 const pageLeaveEvent = T.isObject({
     ...baseEvent,
-    type: T.isLiteral("page-leave"),
+    kind: T.isLiteral("page-leave"),
 });
 
-export const EventSchema = T.isObject({
+export const isEventSchema = T.isObject({
     user: T.isObject({
         id: T.isString(),
         lastVisit: T.isNumber(),
