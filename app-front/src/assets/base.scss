@@ -1,0 +1,192 @@
+
+:root {
+
+  /*   MAIN THEME   */
+  --white: #ffffff;
+  --purple: #8B4BF2;
+  --indigo: #5B5DF0;
+  --light-purple: #fcf8ff;
+
+  --gradient-light: linear-gradient(180deg, rgba(232.69, 232.69, 232.69, 0) 0%, #ECDEF8 100%);
+  --gradient-dark: linear-gradient(180deg, #8C4AF2 0%, #5A5DF0 100%);
+
+  --divider: #BEBFBE;
+  --text: #717372;
+
+  --font-title: 'Poppins', sans-serif;
+
+  --shadow: 4px 4px 4px rgba(86, 144, 198, 0.11), 8px 8px 40px rgba(125, 153, 180, 0.2);
+  --shadow-hover: 12px 12px 8px rgba(86, 144, 198, 0.2), 10px 10px 80px rgba(92, 121, 148, 0.2);
+
+  --radius-small: 4px;
+  --radius-medium: 8px;
+
+  --transition: all 0.3s ease-in-out;
+  /*   /MAIN THEME   */
+
+
+  /*   SEMANTIC VARIABLES   */
+  --color-background: var(--gradient-light);
+
+  --color-border: var(--divider);
+  --color-border-hover: var(--indigo);
+
+  --color-heading: var(--purple);
+  --color-text: var(--text);
+
+  --section-gap: 160px;
+
+  --border: 1px solid var(--color-border);
+  /*   /SEMANTIC VARIABLES   */
+}
+
+
+/*   CLEANUP AND SETUP   */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-text);
+  background: var(--color-background);
+  transition: color 0.5s, background-color 0.5s;
+  line-height: 1.6;
+  font-family: 'Helvetica Neue', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+  Cantarell, 'Fira Sans', 'Droid Sans', sans-serif;
+  font-size: 14px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  background-color: var(--gradient-light);
+  height: 100vh;
+}
+
+main {
+  height: 100vh;
+}
+
+a {
+  text-decoration: unset;
+}
+/*   /CLEANUP AND SETUP   */
+
+
+/*   COLORS   */
+.c-indigo {
+  color: var(--indigo);
+}
+
+.c-purple {
+  color: var(--purple);
+}
+/*   /COLORS   */
+
+
+/*   TYPOGRAPHY   */
+.poppins {
+  font-family: var(--font-title);
+}
+
+.title {
+  color: var(--purple);
+  font-family: var(--font-title);
+}
+
+.caption {
+  font-size: 12px;
+}
+
+.uprcs {
+  text-transform: uppercase;
+}
+
+.undln {
+  text-decoration: underline;
+}
+
+.light {
+  font-weight: 300 !important;
+}
+
+.regular {
+  font-weight: 400 !important;
+}
+
+.medium {
+  font-weight: 500 !important;
+}
+
+.semibold {
+  font-weight: 600 !important;
+}
+
+.bold {
+  font-weight: 700 !important;
+}
+
+.extra-bold {
+  font-weight: 800 !important;
+}
+
+.black {
+  font-weight: 900 !important;
+}
+/*   /TYPOGRAPHY   */
+
+
+/*   FLEXBOX   */
+.flex {
+  display: flex;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.content-sb {
+  justify-content: space-between;
+}
+
+.content-sa {
+  justify-content: space-around;
+}
+
+.content-se {
+  justify-content: space-evenly;
+}
+
+.content-ctr {
+  justify-content: center;
+}
+
+.align-ctr {
+  align-items: center;
+}
+/*   /FLEXBOX   */
+
+
+/*   RADIUS   */
+.rad-sm {
+  border-radius: var(--radius-small);
+}
+
+.rad-md {
+  border-radius: var(--radius-medium);
+}
+/*   /RADIUS   */
+
+
+
+
