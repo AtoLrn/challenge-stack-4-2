@@ -7,7 +7,7 @@ import { requestTiming } from "../monitoring/index.js";
 import { v4 as uuid } from "uuid";
 import AWS from "aws-sdk";
 
-const authRouter = Router();
+export const authRouter = Router();
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -44,7 +44,7 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res) => {
             Bucket: "challenge-stack",
             Key: fileName,
             Body: req.file.buffer,
-            ACL:"public-read"
+            ACL: "public-read",
         };
 
         s3.upload(uploadParams, (err) => {
@@ -67,6 +67,7 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res) => {
             websiteUrl,
             kbisFileUrl: `https://challenge-stack.s3.gra.io.cloud.ovh.net/${fileName}`,
             role: 2,
+            dashboardOptions: JSON.stringify({}),
         });
 
         const mail = {
@@ -127,5 +128,3 @@ authRouter.post("/login", async (req, res) => {
         end();
     }
 });
-
-export default authRouter;
