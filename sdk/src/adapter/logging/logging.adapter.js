@@ -6,9 +6,16 @@ export class Logging {
 
     static pusblish(events) {
         console.log(JSON.stringify(events, null, 4))
-        fetch(Logging.API_URL, {
-            body: events,
-            method: 'POST'
-        })
+
+        var body = new Blob([JSON.stringify(events)], { type: "application/json", withCredentials: true });
+
+        navigator.sendBeacon(Logging.API_URL, body)
+        // fetch(Logging.API_URL, {
+        //     body: events,
+        //     method: 'POST',
+        //     keepalive: true 
+        // }).catch(err => {
+        //     console.log(err)
+        // })
     }
 }
