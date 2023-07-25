@@ -1,7 +1,7 @@
 <template>
   <div id="right-side" class="flex flex-row content-se align-ctr">
     <div class="h-100 flex flex-col align-ctr content-se">
-      <div>
+      <div class="text-ctr">
         <img src="@/assets/img/profile.png" alt="profile picture" style="width: 300px;" />
       </div>
       <div id="kbis-container" class="card">
@@ -57,7 +57,7 @@
             <input type="password" id="new-password" value="vzjzoijvozijeoizjioz" required>
           </div>
           <div id="card-bottom">
-            <button type="submit" class="btn btn-md">Modifier mes informations</button>
+            <button type="submit" class="btn btn-purple btn-md">Modifier mes informations</button>
           </div>
         </form>
       </div>
@@ -73,10 +73,6 @@
 
 #right-side {
   height: 100vh;
-}
-
-#right-side > img {
-  text-align: center;
 }
 
 #right-side > div:last-child {
@@ -116,12 +112,6 @@
 
     button {
       width: 100%;
-      background-color: var(--purple);
-
-      &:hover {
-        background-color: var(--indigo);
-      }
-
     }
 
   }

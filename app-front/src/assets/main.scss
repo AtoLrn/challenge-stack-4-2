@@ -49,9 +49,17 @@
   }
 
   &:hover {
-    background-color: var(--purple);
+    background-color: var(--dark-indigo);
   }
 
+  &-purple {
+    background-color: var(--purple);
+
+    &:hover {
+      background-color: var(--dark-purple);
+    }
+
+  }
 }
 /*   /BUTTONS   */
 
@@ -79,6 +87,36 @@ input {
 /*   /INPUTS   */
 
 
+/*   SELECTS   */
+select {
+  background-color: #f2f2f2;
+  border: 1px solid var(--divider);
+  padding: 8px;
+  border-radius: var(--radius-small);
+  color: var(--text);
+  transition: var(--purple);
+
+  option {
+    background-color: var(--white);
+    color: var(--purple);
+    transition: var(--transition);
+
+    &:hover,
+    &:checked {
+      background-color: var(--indigo);
+      color: white;
+    }
+  }
+
+  &:focus {
+    border-color: var(--purple);
+    outline: none;
+  }
+
+}
+/*   /SELECTS   */
+
+
 /*   CARDS   */
 .card {
   background-color: var(--white);
@@ -87,3 +125,35 @@ input {
 }
 /*   /CARDS   */
 
+
+/*   TABLE   */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 0.75rem 0.5rem;
+    border-bottom: var(--border);
+    text-align: left;
+  }
+
+  thead tr th:last-child,
+  tbody tr td:last-child{
+    text-align: right;
+  }
+
+  tbody {
+
+    tr {
+      transition: var(--transition);
+    }
+
+    tr:hover {
+      background-color: var(--light-purple);
+      color: var(--text-dark);
+    }
+
+  }
+
+}
+/*   /TABLE   */

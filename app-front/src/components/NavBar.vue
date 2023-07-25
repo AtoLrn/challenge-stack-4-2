@@ -25,6 +25,14 @@
           <p>Utilisateurs</p>
         </RouterLink>
       </li>
+      <li>
+        <RouterLink :to="{name: 'tags'}" class="link-white flex align-ctr">
+          <div>
+            <i class="fa-solid fa-tags"></i>
+          </div>
+          <p>Tags</p>
+        </RouterLink>
+      </li>
     </ul>
 
     <ul>
