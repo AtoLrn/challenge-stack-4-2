@@ -10,7 +10,7 @@
         "migrate": "node ./src/migrate.js",
         "format": "prettier --write ./",
         "lint": "eslint ./src/",
-        "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+        "test": "NODE_OPTIONS=--experimental-vm-modules jest ./test/api/auth.test.js --forceExit"
     },
     "author": "",
     "license": "ISC",

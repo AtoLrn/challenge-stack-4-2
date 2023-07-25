@@ -3,4 +3,5 @@ module.exports = {
     testMatch: ["**/*.test.js"],
     testEnvironment: "node",
     verbose: true,
+    tranform: {}
 };

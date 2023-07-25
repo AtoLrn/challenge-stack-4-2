@@ -74,7 +74,7 @@ if (!admin) {
         await userService.create({
             firstname: "admin",
             lastname: "admin",
-            email: config.adminEmail,
+            email: "admin@admin.fr",
             password: password,
             isVerified: true,
             societyName: "admin",
