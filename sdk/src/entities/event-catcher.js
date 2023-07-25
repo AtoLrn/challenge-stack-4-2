@@ -17,8 +17,10 @@ export class EventCatcher {
     #page
 
     #lastTimeout
+    #appId
 
-    constructor() {
+    constructor(appId) {
+        this.#appId = appId
         this.#user = this.#getUser()
         this.#page = PageAdapter.getPageInfo()
         this.#device = DeviceAdapter.getDeviceInfo()
@@ -99,6 +101,7 @@ export class EventCatcher {
 
     #buildRequest() {
         return {
+            appId: this.#appId,
             user: this.#user,
             page: this.#page,
             device: this.#device,

@@ -41,6 +41,7 @@ const navigateEvent = T.isObject({
 });
 
 export const isEventSchema = T.isObject({
+    appId: T.isString(),
     user: T.isObject({
         id: T.isString(),
         lastVisit: T.isNumber(),

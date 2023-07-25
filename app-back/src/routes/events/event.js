@@ -33,8 +33,6 @@ export const checkIfCorsAllowed = async (req, callback) => {
         return;
     }
 
-    req.appId = user.appId;
-
     callback(null, { origin: true, credentials: true });
 };
 
@@ -45,7 +43,7 @@ eventRouter.post("", async (req, res) => {
         return false;
     }
 
-    const event = { ...req.body, appId: req.appId };
+    const event = req.body;
 
     EventModel.create(event);
 
