@@ -1,7 +1,3 @@
-<script setup>
-
-</script>
-
 <template>
 
   <div id="dashboard" class="card">
@@ -13,7 +9,7 @@
         <div class="popup">
           <span class="close" @click="closePopup">&times;</span>
           <form @submit.prevent="addGraph">
-            <label for="graphType">Model de graphique:</label>
+            <label for="graphType">Data :</label>
             <select id="graphType" v-model="graphType">
               <option value="visite">Nb de visite</option>
               <option value="page">Pages Vues</option>
@@ -22,12 +18,6 @@
 
             <label for="graphName">Nom du graphique:</label>
             <input type="text" id="graphName" v-model="graphName" required>
-
-            <label for="startDate">Date de début:</label>
-            <input type="datetime-local" id="startDate" v-model="startDate" required>
-
-            <label for="endDate">Date de fin:</label>
-            <input type="datetime-local" id="endDate" v-model="endDate" required>
 
             <button type="submit">Ajouter</button>
           </form>
@@ -42,10 +32,8 @@ export default {
   data() {
     return {
       showPopup: false,
-      graphType: "",
+      graphData: "",
       graphName: "",
-      startDate: "",
-      endDate: "",
     };
   },
   methods: {
@@ -57,10 +45,8 @@ export default {
     },
     closePopup() {
       this.showPopup = false;
-      this.graphType = ""
-      this.graphName = ""
-      this.startDate = ""
-      this.endDate = ""
+      graphData = "";
+      graphName = "";
     },
   },
 };
