@@ -14,6 +14,10 @@ const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
+            path: '/',
+            redirect: '/security/login'
+        },
+        {
             path: '/security',
             name: 'security',
             component: SecurityView,
