@@ -11,7 +11,14 @@ import { authRouter } from "./routes/auth.js";
 import { userRouter } from "./routes/user.js";
 import { tagRouter } from "./routes/tag.js";
 
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+
 const PORT = config.port || 3000;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const app = express();
 
@@ -21,12 +28,21 @@ const apiRouter = new Router();
 // app.use(cors());
 app.use(express.json());
 
-app.use(express.static("public"));
 
-app.get("/health", (_, res) => {
-    const end = requestTiming.labels({ path: "test" }).startTimer();
-    res.sendStatus(200);
-    end();
+
+app.use(express.static(__dirname + "../public"));
+
+app.get("*", function (request, response) {
+    try {
+        if (fs.lstatSync(path.resolve(__dirname, "../public/", `./${request.path}`)).isFile()) {
+            response.sendFile(path.resolve(__dirname, "../public", `./${request.path}`));
+        } else {
+            response.sendFile(path.resolve(__dirname, "../public/index.html"));
+        }
+    } catch {
+        response.sendFile(path.resolve(__dirname, "../public/index.html"));
+    }
+
 });
 
 app.use("/api", apiRouter);
