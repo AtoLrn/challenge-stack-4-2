@@ -8,6 +8,8 @@ import { EventModel } from "./../../database/models/Events.js";
 
 import { Subject } from "rxjs";
 
+import UAParser from "ua-parser-js";
+
 export const eventRouter = Router();
 
 const eventSubject = new Subject();
@@ -44,8 +46,24 @@ eventRouter.post("", async (req, res) => {
         return false;
     }
 
-    const event = req.body;
+    const parser = new UAParser(req.body.device.ua);
+    const uaParsedInfo = {
+        browser: {
+            name: parser.getBrowser().name ?? "unkonwn"
+        },
+        os: parser.getOS().name ?? "unkonwn",
+        kind: parser.getDevice().type ?? "unkonwn"
+    };
 
+    console.log(parser.getResult());
+    
+    req.body.device = {
+        ...req.body.device,
+        ...uaParsedInfo
+    };
+
+    const event = req.body;
+    
     EventModel.create(event);
 
     eventSubject.next(event);

@@ -7,7 +7,7 @@ const ObjectId = Schema.ObjectId;
 
 export const EventsSchema = new Schema({
     id: ObjectId,
-    appId: ObjectId,
+    appId: String,
     user: {
         id: String,
         lastVisit: Number,
@@ -28,6 +28,11 @@ export const EventsSchema = new Schema({
             speed: Number,
             type: String,
         },
+        browser: {
+            name: String
+        },
+        kind: String,
+        os: String
     },
     events: [Object],
 });
