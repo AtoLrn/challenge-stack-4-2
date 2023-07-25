@@ -3,7 +3,13 @@
     <main class="flex flex-row">
       <NavBar></NavBar>
       <div id="content">
+        <Suspense>
         <router-view></router-view>
+
+        <template #fallback>
+        Loading...
+      </template>
+    </Suspense>
       </div>
     </main>
 

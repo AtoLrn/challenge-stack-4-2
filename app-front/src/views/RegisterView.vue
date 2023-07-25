@@ -17,11 +17,11 @@
       </div>
       <div class="flex flex-col">
         <label for="password" class="caption c-purple">Mot de passe</label>
-        <input type="password" id="password" v-model.trim="password" required>
+        <input type="password" id="password" v-model="password" required>
       </div>
       <div class="flex flex-col">
         <label for="password" class="caption c-purple">Confirmer le mot de passe</label>
-        <input type="password" id="password-validation" v-model.trim="passwordConfirmation" required>
+        <input type="password" id="password-validation" v-model="passwordConfirmation" required>
       </div>
       <div class="flex flex-col">
         <label for="company" class="caption c-purple">Nom de société</label>

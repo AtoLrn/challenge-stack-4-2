@@ -5,7 +5,13 @@
     <img src="@/assets/img/charts.png" alt="charts picture"/>
   </div>
   <div class="form-container">
-    <router-view></router-view>
+    <Suspense>
+        <router-view></router-view>
+
+        <template #fallback>
+        Loading...
+      </template>
+    </Suspense>
   </div>
 </main>
 

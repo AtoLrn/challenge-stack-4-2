@@ -10,7 +10,7 @@
     </div>
     <div class="flex flex-col">
       <div class="card">
-        <form>
+        <form @submit.prevent="handleSubmit">
           <div>
             <p class="title c-indigo">
               Informations personnelles
@@ -19,16 +19,16 @@
           <div class="flex flex-row content-sb">
             <div class="flex flex-col">
               <label for="lastname" class="caption c-purple">Nom</label>
-              <input type="text" id="lastname" value="DOE" required>
+              <input type="text" id="lastname"  v-model.trim="lastname" required>
             </div>
             <div class="flex flex-col">
               <label for="firstname" class="caption c-purple">Prénom</label>
-              <input type="text" id="firstname" value="John" required>
+              <input type="text" id="firstname"   v-model.trim="firstname" required>
             </div>
           </div>
           <div class="flex flex-col bdr-btm">
             <label for="email" class="caption c-purple">Email</label>
-            <input type="email" id="email" value="johndoe@gmail.com" required>
+            <input type="email" id="email"  v-model.trim="email" required>
           </div>
           <div>
             <p class="title c-indigo">
@@ -37,11 +37,11 @@
           </div>
           <div class="flex flex-col">
             <label for="company" class="caption c-purple">Nom de société</label>
-            <input type="text" id="company" value="QuackMart" required>
+            <input type="text" id="company" v-model.trim="company" required>
           </div>
           <div class="flex flex-col bdr-btm">
             <label for="url" class="caption c-purple">Url du site à analyser</label>
-            <input type="text" id="url" value="https://quackmart.com" required>
+            <input type="text" id="url" v-model.trim="url" required>
           </div>
           <div>
             <p class="title c-indigo">
@@ -50,11 +50,11 @@
           </div>
           <div class="flex flex-col">
             <label for="password" class="caption c-purple">Mot de passe actuel</label>
-            <input type="password" id="password" value="vzjzoijvozijeoizjioz" required>
+            <input type="password" id="password" v-model="password" required>
           </div>
           <div class="flex flex-col">
             <label for="new-password" class="caption c-purple">Nouveau mot de passe</label>
-            <input type="password" id="new-password" value="vzjzoijvozijeoizjioz" required>
+            <input type="password" id="new-password" v-model="passwordConfirmation" required>
           </div>
           <div id="card-bottom">
             <button type="submit" class="btn btn-purple btn-md">Modifier mes informations</button>
@@ -66,7 +66,31 @@
 </template>
 
 <script setup>
+import { handleRequest } from './../../utils/request'
+import { saveToken } from './../../utils/token'
 
+import router from './../../router'
+
+import { ref } from 'vue'
+
+const lastValues = await handleRequest('/user/profile')
+
+const firstname = ref(lastValues.firstname)
+const lastname = ref(lastValues.lastname)
+const email = ref(lastValues.email)
+const password = ref()
+const passwordConfirmation = ref()
+
+const company = ref(lastValues.societyName)
+const url = ref(lastValues.websiteUrl)
+
+const handleSubmit = async () => {
+  const res = await handleRequest('/auth/login', { json: { email: email.value, password: password.value } }, false)
+  
+  saveToken(res.token)
+
+  router.push('/administration/dashboard')
+}
 </script>
 
 <style scoped lang="scss">
