@@ -7,7 +7,7 @@ import DashboardView from "@/views/Administration/DashboardView.vue";
 import UsersView from "@/views/Administration/UsersView.vue";
 import ProfileView from "@/views/Administration/ProfileView.vue";
 import RequestsView from "@/views/Administration/RequestsView.vue";
-
+import TagsView from "@/views/Administration/TagsView.vue";
 
 
 const router = createRouter({
@@ -53,6 +53,11 @@ const router = createRouter({
                     path: 'requests',
                     name: 'requests',
                     component: RequestsView
+                },
+                {
+                    path: 'tags',
+                    name: 'tags',
+                    component: TagsView
                 },
                 {
                     path: 'profile',

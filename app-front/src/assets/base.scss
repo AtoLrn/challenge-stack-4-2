@@ -4,14 +4,18 @@
   /*   MAIN THEME   */
   --white: #ffffff;
   --purple: #8B4BF2;
+  --dark-purple: #723cde;
   --indigo: #5B5DF0;
+  --dark-indigo: #3f41d6;
   --light-purple: #fcf8ff;
+  --lilac: #e3daf6;
 
   --gradient-light: linear-gradient(180deg, rgba(232.69, 232.69, 232.69, 0) 0%, #ECDEF8 100%);
   --gradient-dark: linear-gradient(180deg, #8C4AF2 0%, #5A5DF0 100%);
 
   --divider: #BEBFBE;
   --text: #717372;
+  --text-dark: #414141;
 
   --font-title: 'Poppins', sans-serif;
 
@@ -144,6 +148,10 @@ a {
 
 
 /*   SIZES  */
+.w-50 {
+  width: 50%;
+}
+
 .w-100 {
   width: 100%;
 }
@@ -184,6 +192,10 @@ a {
   justify-content: center;
 }
 
+.content-st {
+  justify-content: flex-start;
+}
+
 .align-ctr {
   align-items: center;
 }
@@ -203,4 +215,18 @@ a {
 
 .bdr-btm {
   border-bottom: var(--border);
+}
+
+
+/*   ALIGNMENTS   */
+.text-ctr {
+  text-align: center;
+}
+
+.text-l {
+  text-align: left;
+}
+
+.text-r {
+  text-align: right;
 }

@@ -1,7 +1,7 @@
 <template>
 
 <main class="flex flex-row align-ctr content-ctr">
-  <div class="img-container">
+  <div class="img-container text-ctr">
     <img src="@/assets/img/charts.png" alt="charts picture"/>
   </div>
   <div class="form-container">
@@ -21,8 +21,6 @@
 }
 
 .img-container {
-  text-align: center;
-
   img {
     width: 400px;
   }

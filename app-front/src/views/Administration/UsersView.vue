@@ -1,6 +1,6 @@
 <template>
   <div id="admin-panel" class="card">
-    <table>
+    <table class="table">
       <thead>
       <tr>
         <th class="title">Nom</th>
@@ -32,38 +32,5 @@
 
 <style scoped lang="scss">
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-
-  th, td {
-    padding: 0.75rem 0.5rem;
-    border-bottom: var(--border);
-    text-align: left;
-  }
-
-  th {
-    font-size: 16px;
-  }
-
-  thead tr th:last-child,
-  tbody tr td:last-child{
-    text-align: right;
-  }
-
-  tbody {
-
-    tr {
-      transition: var(--transition);
-    }
-
-    tr:hover {
-      background-color: var(--light-purple);
-    }
-
-
-  }
-
-}
 
 </style>
