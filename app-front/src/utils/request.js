@@ -5,7 +5,7 @@ export const handleRequest = async (path, { json, formData }, useCredentials = t
         headers['Content-type'] = 'application/json'
     }
 
-    const res = await fetch(path, {
+    const res = await fetch(`/api${path}`, {
         method: 'post',
         body: json ? JSON.stringify(json) : formData,
         headers
