@@ -29,10 +29,11 @@ tagRouter.post("/", checkAuth(false), async (req, res) => {
             name,
             description,
             userId: req.user.id,
+            isDeleted: false
         });
 
         return res.status(200).send({
-            msg: "Tag successfully created",
+            msg: "Votre tag a été crée",
             data: tag,
         });
     } catch (error) {
@@ -63,7 +64,7 @@ tagRouter.put("/:id", checkAuth(false), async (req, res) => {
         );
 
         return res.status(200).send({
-            msg: "Tag updated !",
+            msg: "Tag modifiés !",
             data: updatedTag,
         });
     } catch (error) {
@@ -78,18 +79,18 @@ tagRouter.delete("/:id", checkAuth(false), async (req, res) => {
             id: req.params.id,
         });
 
-        if (!tag) return res.status(404).send({ error: "this tag does not exist" });
+        if (!tag) return res.status(404).send({ error: "This tag does not exist" });
 
         if (req.user.id != tag.userId && req.user.role != 1) {
             return res.status(403).send({ error: "Higher privileges needed" });
         }
 
-        await tagService.delete({
+        await tagService.update({
             id: req.params.id,
-        });
+        }, { isDeleted: true });
 
         return res.status(200).send({
-            msg: `Tag ${req.params.id} deleted !`,
+            msg: "Votre tag a été supprimé.",
         });
     } catch (error) {
         console.log(error);

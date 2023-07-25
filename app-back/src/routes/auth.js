@@ -32,12 +32,12 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res) => {
             email: email,
         });
 
-        if (user) return res.status(409).send({ error: "Email already taken" });
+        if (user) return res.status(409).send({ error: "Email déjà prit" });
 
-        if (!req.file) return res.status(400).send({ error: "File needed for the kbis" });
+        if (!req.file) return res.status(400).send({ error: "Un fichier est nécessaire pour les kbis" });
 
         if (req.file.mimetype !== "application/pdf")
-            return res.status(400).send({ error: "The file must be pdf" });
+            return res.status(400).send({ error: "Le fichier doit être pdf" });
 
         const fileName = `${uuid()}.pdf`;
         const uploadParams = {
@@ -50,7 +50,7 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res) => {
         s3.upload(uploadParams, (err) => {
             if (err) {
                 console.log(err);
-                return res.status(500).send({ error: "Error while uploading file" });
+                return res.status(500).send({ error: "Erreur durant l'upload du fichier" });
             }
             console.log("Data successfully sent");
         });
@@ -73,8 +73,8 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res) => {
         const mail = {
             from: config.gmail.user,
             to: email,
-            subject: "Account created !",
-            text: "Your account has been successfully created ! You now have to wait for an admin to verify your account.",
+            subject: "Compte crée !",
+            text: "Votre compte a été crée ! Vous n'avez plus qu'à attendre qu'un administrateur valide votre compte !",
         };
 
         config.gmail.transporter.sendMail(mail, (error) => {
@@ -84,7 +84,7 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res) => {
         });
 
         return res.status(200).send({
-            msg: "User created !",
+            msg: "Votre compte a été crée !",
         });
     } catch (error) {
         return res.status(400).send({ error: error });
@@ -104,25 +104,25 @@ authRouter.post("/login", async (req, res) => {
         });
 
         if (!user) {
-            return res.status(404).send({ error: "No user with this email" });
+            return res.status(404).send({ error: "Il n'y a pas d'utilisateur avec cet email" });
         }
 
         const isPasswordValid = await checkPassword(password, user.password);
 
         if (!isPasswordValid) {
-            return res.status(401).send({ error: "Wrong password" });
+            return res.status(401).send({ error: "Mauvais mot de passe" });
         } else if (!user.isVerified) {
-            return res.status(401).send({ error: "User not verified" });
+            return res.status(401).send({ error: "Votre compte n'a pas été vérifié" });
         }
 
         const token = generateToken(user.id);
 
         return res.status(200).send({
-            msg: "Successfully logged in",
+            msg: "Identification réussie !",
             token: token,
         });
     } catch (error) {
-        console.log(error);
+        console.log(error)
         return res.status(400).send({ error: error });
     } finally {
         end();

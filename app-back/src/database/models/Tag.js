@@ -12,5 +12,6 @@ export const Tag = (sequelize) => {
                 key: "id",
             },
         },
+        isDeleted: DataTypes.BOOLEAN
     });
 };
