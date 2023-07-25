@@ -11,6 +11,9 @@
         </tr>
       </thead>
       <tbody>
+        <tr v-if="usersList.data.length === 0">
+          <td class="text-ctr" colspan="5">Aucun utilisateur en attente de vérification</td>
+        </tr>
         <tr v-for="user in usersList.data">
           <td>{{ user.firstname }}</td>
           <td>{{ user.lastname }}</td>
@@ -27,9 +30,14 @@
 </template>
 
 <script setup>
+
 import {handleRequest} from "@/utils/request";
 
 const usersList = await handleRequest('/user');
+
+const tagsList = await handleRequest('/tag');
+
+console.log(tagsList.data);
 </script>
 
 <style scoped>

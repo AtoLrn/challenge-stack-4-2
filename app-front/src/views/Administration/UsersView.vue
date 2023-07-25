@@ -12,7 +12,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="user in usersList.data">
+        <tr v-if="usersList.data.length === 0">
+          <td class="text-ctr" colspan="6">Aucun utilisateur enregistré</td>
+        </tr>
+        <tr v-else
+            v-for="user in usersList.data">
           <td>{{ user.firstname }}</td>
           <td>{{ user.lastname }}</td>
           <td>{{ user.email }}</td>
