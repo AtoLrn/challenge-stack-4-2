@@ -19,8 +19,6 @@ export class EventCatcher {
     #lastTimeout
 
     constructor() {
-        super();
-
         this.#user = this.#getUser()
         this.#page = PageAdapter.getPageInfo()
         this.#device = DeviceAdapter.getDeviceInfo()
