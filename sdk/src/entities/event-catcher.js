@@ -60,9 +60,11 @@ export class EventCatcher {
             pushState.apply(history, arguments);
 
             that.#stackEvent(new NavigateEvent(path.current))
-
             that.#stackEvent(new PageLeaveEvent())
             that.#sendEvents()
+
+            that.#events = []
+            that.#stackEvent(new PageViewEvent())
         };
     }
 
