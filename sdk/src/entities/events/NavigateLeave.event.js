@@ -4,8 +4,8 @@ export class NavigateEvent extends Event {
     #path
     
     constructor(path, tag) {
-        this.#path = path
         super('navigate', tag)
+        this.#path = path
     }
 
     toJSON () {
