@@ -44,8 +44,8 @@ userRouter.put("/verify/:id", checkAuth(true), async (req, res) => {
         const mail = {
             from: config.gmail.user,
             to: user.email,
-            subject: "Account verified !",
-            text: "Your account has been successfully verified ! You can now use the analytics tool.",
+            subject: "Compte vérifé !",
+            text: "Votre compte a été vérifié, vous pouvez maintenant utiliser l'outil d'analytics !",
         };
 
         config.gmail.transporter.sendMail(mail, (error) => {
@@ -55,7 +55,7 @@ userRouter.put("/verify/:id", checkAuth(true), async (req, res) => {
         });
 
         return res.status(200).send({
-            msg: `user ${user.id} Successfully verified`,
+            msg: `L'utilisateur ${user.email} a été vérifié`,
         });
     } catch (error) {
         console.log(error);
@@ -75,7 +75,7 @@ userRouter.get("/app-id", checkAuth(false), async (req, res) => {
         );
 
         return res.status(200).send({
-            msg: "There is your new app id",
+            msg: "Nouvel ID généré !",
             data: appId,
         });
     } catch (error) {
@@ -109,7 +109,7 @@ userRouter.put("/dashboard", checkAuth(false), async (req, res) => {
         );
 
         return res.status(200).send({
-            msg: "There is your new dashboard",
+            msg: "Dashboard modifié !",
             data: user.dashboardOptions,
         });
     } catch (error) {
@@ -162,7 +162,7 @@ userRouter.put("/:id", checkAuth(false), async (req, res) => {
         updatedUser.appId = null;
 
         return res.status(200).send({
-            msg: "User updated !",
+            msg: "Utilisateur modifié !",
             data: updatedUser,
         });
     } catch (error) {
@@ -183,7 +183,7 @@ userRouter.delete("/:id", checkAuth(false), async (req, res) => {
         });
 
         return res.status(200).send({
-            msg: `User ${req.params.id} deleted !`,
+            msg: `Utilisateur ${req.params.id} supprimé !`,
         });
     } catch (error) {
         console.log(error);
