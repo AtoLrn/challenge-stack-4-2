@@ -4,6 +4,7 @@ import { ClickEvent } from "./events/click.event"
 import { Logging } from "../adapter/logging/logging.adapter"
 import { DeviceAdapter } from "../adapter/device/device.adapter"
 import { PageLeaveEvent } from "./events/pageLeave.event"
+import { NavigateEvent } from "./events/NavigateLeave.event"
 import { PageViewEvent } from "./events/pageView.event"
 import { MouseEvent } from "./events/mouseMove.event"
 import { PageAdapter } from "../adapter/page/page.adapter"
@@ -49,6 +50,16 @@ export class EventCatcher {
 
             this.#stackEvent(newEvent)
             this.#sendEvents()
+        };
+
+        const pushState = history.pushState.bind(history);
+        history.pushState = (path, __) => {
+            this.#stackEvent(new NavigateEvent(path))
+
+            this.#stackEvent(new PageLeaveEvent())
+            this.#sendEvents()
+            
+            return pushState(path, __);
         };
     }
 

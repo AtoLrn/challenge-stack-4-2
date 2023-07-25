@@ -34,6 +34,12 @@ const pageLeaveEvent = T.isObject({
     kind: T.isLiteral("page-leave"),
 });
 
+const navigateEvent = T.isObject({
+    ...baseEvent,
+    kind: T.isLiteral("navigate"),
+    path: T.isString()
+});
+
 export const isEventSchema = T.isObject({
     user: T.isObject({
         id: T.isString(),
@@ -59,6 +65,6 @@ export const isEventSchema = T.isObject({
         ),
     }),
     events: T.isArray(
-        T.isOneOf([mouseEvent, mouseMovementEvent, pageViewEvent, pageLeaveEvent, submitEvent])
+        T.isOneOf([mouseEvent, mouseMovementEvent, pageViewEvent, pageLeaveEvent, submitEvent, navigateEvent])
     ),
 });
