@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { handleRequest } from './../utils/request'
+
 export default {
   data() {
     return {
@@ -49,6 +51,9 @@ export default {
       graphName = "";
     },
   },
+  beforeMount() {
+    const res = await 
+  }
 };
 </script>
 
