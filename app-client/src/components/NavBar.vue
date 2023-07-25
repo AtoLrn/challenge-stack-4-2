@@ -8,7 +8,7 @@
         <p>QuackMart</p>
       </div>
       <nav>
-        <RouterLink to="/">Accueil</RouterLink>
+        <RouterLink to="/" sdk-id="abcdefg">Accueil</RouterLink>
         <RouterLink to="/shop">Shopping</RouterLink>
       </nav>
 

@@ -12,7 +12,7 @@
         </div>
         <div>
           <RouterLink to="/shop">
-            <button class="btn btn-lg">Parcourir les goodies</button>
+            <button class="btn btn-lg" sdk-id="abcdefg2">Parcourir les goodies</button>
           </RouterLink>
         </div>
       </div>
