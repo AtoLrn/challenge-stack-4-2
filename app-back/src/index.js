@@ -6,15 +6,17 @@ import { encryptPassword } from "./utils/auth.js";
 
 import { register, requestTiming } from "./monitoring/index.js";
 
-import authRouter from "./routes/auth.js";
-import userRouter from "./routes/user.js";
+import { eventRouter, checkIfCorsAllowed } from "./routes/events/event.js";
+import { authRouter } from "./routes/auth.js";
+import { userRouter } from "./routes/user.js";
+import { tagRouter } from "./routes/tag.js";
 
 const PORT = config.port || 3000;
 
-const app = express();
+export const app = express();
 
 // middlewares
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
 
 app.get("/", (_, res) => {
@@ -36,6 +38,9 @@ app.get("/metrics", async (_, res) => {
 
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
+app.use("/tag", tagRouter);
+
+app.use("/event", cors(checkIfCorsAllowed), eventRouter);
 
 // Create default admin
 const admin = await userService.findBy({
@@ -56,6 +61,7 @@ if (!admin) {
             websiteUrl: "admin.fr",
             kbisFileUrl: "admin",
             role: 1,
+            dashboardOptions: JSON.stringify({}),
         });
 
         console.log("Admin account created");

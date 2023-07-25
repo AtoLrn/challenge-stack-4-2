@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: backend
+  name: backend
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: alorin/backend:0.0.3
+        env:
+        - name: PORT
+          value: "3000"
+        - name: ADMIN_EMAIL
+          value: admin@admin.fr
+        - name: ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: admin-password
+              name: backend
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: jwt-token
+              name: backend
+        - name: MONGO_URL
+          value: mongodb://root:example@mongodb-svc:27017/
+        - name: POSTGRE_HOST
+          value: postgres-svc
+        - name: POSTGRE_USER
+          value: postgres
+        - name: POSTGRE_PASSWORD
+          value: example
+        - name: POSTGRE_DATABASE
+          value: app
+        - name: OVH_ENDPOINT
+          value: https://s3.gra.io.cloud.ovh.net
+        - name: OVH_APP_KEY
+          valueFrom:
+            secretKeyRef:
+              key: ovh-app-key
+              name: backend
+        - name: OVH_APP_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: ovh-app-token
+              name: backend
+        - name: GMAIL_USER
+          valueFrom:
+            secretKeyRef:
+              key: gmail-user
+              name: backend
+        - name: GMAIL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: gmail-password
+              name: backend
+
+        resources:
+          requests:
+            cpu: "128m"
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            port: 3000
+            path: /
+      terminationGracePeriodSeconds: 60
+  minReadySeconds: 60

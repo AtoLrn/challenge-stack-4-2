@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Sequelize from "sequelize";
-import User from "./models/User.js";
+import { User } from "./models/User.js";
+import { Tag } from "./models/Tag.js";
 import { config } from "../env.js";
 
 mongoose.connect(config.db.mongo_url);
@@ -15,7 +16,7 @@ const sequelize = new Sequelize(
     config.db.postgre_user,
     config.db.postgre_password,
     {
-        host: config.postgre_host,
+        host: config.db.postgre_host,
         dialect: "postgres",
     }
 );
@@ -35,5 +36,6 @@ const databases = {
 };
 
 databases.User = User(sequelize);
+databases.Tag = Tag(sequelize);
 
 export default databases;
