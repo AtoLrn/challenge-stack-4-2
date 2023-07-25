@@ -5,6 +5,20 @@
           <button @click="openPopup">+</button>
       </div>
 
+      <div class="filter">
+        <label for="filterPath">URL :</label>
+        <select id="filterPath" v-model="choosedPath">
+            <option v-for="path in paths" v-bind:value="path">{{ path }}</option>
+        </select>
+
+        <label for="filterTag">Tag :</label>
+        <select id="filterTag" v-model="choosedTag">
+            <option v-for="tag in tags" v-bind:value="tag.name">
+                {{ tag.name }} | {{ tag.description }}
+            </option>
+        </select>
+      </div>
+
       <div v-if="showPopup" class="popup-overlay">
         <div class="popup">
           <span class="close" @click="closePopup">&times;</span>
@@ -28,7 +42,7 @@
 </template>
 
 <script>
-import { handleRequest } from './../utils/request'
+import { handleRequest } from '../../utils/request'
 
 export default {
   data() {
@@ -36,6 +50,10 @@ export default {
       showPopup: false,
       graphData: "",
       graphName: "",
+      paths: [],
+      tags: [],
+      choosedPath: "",
+      choosedTag: "",
     };
   },
   methods: {
@@ -52,7 +70,19 @@ export default {
     },
   },
   beforeMount() {
-    const res = await 
+    handleRequest("/event/path")
+        .then(data => this.paths = data)
+
+    handleRequest("/tag")
+        .then(res => {
+            const tags = res.data.map(tag => {
+              return {
+                name: tag.name,
+                description: tag.description
+              };
+            });
+            this.tags = tags
+        })
   }
 };
 </script>

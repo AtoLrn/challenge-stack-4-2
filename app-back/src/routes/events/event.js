@@ -85,11 +85,41 @@ eventRouter.get("/stream", async (req, res) => {
     });
 });
 
+eventRouter.get("/path", checkAuth(false), async (req, res) => {
+    try {
+        const paths = await EventModel.aggregate([
+            {
+                $match: {
+                    appId: req.user.appId
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    "page.path": 1
+                }
+            }
+        ]);
+
+        const pathsArray = paths.map((event) => event.page.path);
+        const pathResponse = pathsArray.filter((path, index) => pathsArray.indexOf(path) === index);
+
+        return res.status(200).send(pathResponse);
+    } catch(error) {
+        console.log(error)
+        return res.status(400).send({ error: error });
+    }
+})
+
 eventRouter.get("/", checkAuth(false), async (req, res) => {
     try {
         const { dimension, startDate, endDate } = req.body;
 
-        const aggregationPipeline = [];
+        const aggregationPipeline = [{
+            $match: {
+                appId: req.user.appId
+            }
+        }];
 
         dimension.forEach((filter) => {
             switch (filter.type) {
