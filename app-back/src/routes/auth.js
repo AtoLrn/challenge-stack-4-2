@@ -57,14 +57,14 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res) => {
 
         const encryptedPassword = await encryptPassword(password);
 
-        const createdUser = await userService.create({
+        await userService.create({
             firstname,
             lastname,
             email,
             password: encryptedPassword,
             isVerified: false,
             societyName,
-            websiteUrl,
+            websiteUrl: new URL(websiteUrl).hostname,
             kbisFileUrl: `https://challenge-stack.s3.gra.io.cloud.ovh.net/${fileName}`,
             role: 2,
             dashboardOptions: JSON.stringify({}),
@@ -85,7 +85,6 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res) => {
 
         return res.status(200).send({
             msg: "User created !",
-            data: createdUser,
         });
     } catch (error) {
         return res.status(400).send({ error: error });
@@ -123,6 +122,7 @@ authRouter.post("/login", async (req, res) => {
             token: token,
         });
     } catch (error) {
+        console.log(error);
         return res.status(400).send({ error: error });
     } finally {
         end();

@@ -63,17 +63,13 @@ userRouter.put("/verify/:id", checkAuth(true), async (req, res) => {
     }
 });
 
-userRouter.get("/:id/app-id", checkAuth(false), async (req, res) => {
+userRouter.get("/app-id", checkAuth(false), async (req, res) => {
     //generate new app id
     try {
-        if (req.user.role != 1 && req.user.id != req.params.id) {
-            return res.status(403).send({ error: "Higher privileges needed" });
-        }
-
         const appId = crypto.randomBytes(15).toString("hex");
         await userService.update(
             {
-                id: req.params.id,
+                id: req.user.id,
             },
             { appId }
         );
@@ -88,12 +84,23 @@ userRouter.get("/:id/app-id", checkAuth(false), async (req, res) => {
     }
 });
 
-userRouter.put("/:id/dashboard", checkAuth(false), async (req, res) => {
+userRouter.get("/dashboard", checkAuth(false), async (req, res) => {
     try {
-        if (req.user.role != 1 && req.user.id != req.params.id) {
-            return res.status(403).send({ error: "Higher privileges needed" });
-        }
+        const user = await userService.findBy({
+            id: req.user.id,
+        });
 
+        return res.status(200).send({
+            data: user.dashboardOptions,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send({ error: error });
+    }
+});
+
+userRouter.put("/dashboard", checkAuth(false), async (req, res) => {
+    try {
         const user = await userService.update(
             {
                 id: req.params.id,
@@ -122,7 +129,6 @@ userRouter.get("/:id", checkAuth(false), async (req, res) => {
             id: req.params.id,
         });
         delete user.password;
-        delete user.appId;
 
         return res.status(200).send({ data: user });
     } catch (error) {

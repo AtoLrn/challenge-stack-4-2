@@ -1,4 +1,5 @@
 import { userService } from "../../services/user.js";
+import { checkAuth } from "../../middlewares/checkAuth.js";
 
 import { Router } from "express";
 import { isEventSchema } from "./dto.js";
@@ -66,4 +67,60 @@ eventRouter.get("/stream", async (req, res) => {
     res.on("close", () => {
         subscription.unsubscribe();
     });
+});
+
+eventRouter.get("/", checkAuth(false), async (req, res) => {
+    try {
+        const { dimension, startDate, endDate } = req.body;
+
+        const aggregationPipeline = [];
+
+        dimension.forEach((filter) => {
+            switch (filter.type) {
+                case "path":
+                    aggregationPipeline.push({
+                        $match: {
+                            "page.path": filter.value,
+                        },
+                    });
+                    break;
+                case "device":
+                    aggregationPipeline.push({
+                        $match: {
+                            "device.ua": filter.value,
+                        },
+                    });
+                    break;
+                case "tag":
+                    aggregationPipeline.push(
+                        {
+                            $addFields: {
+                                events: {
+                                    $filter: {
+                                        input: "$events",
+                                        as: "event",
+                                        cond: { $eq: ["$$event.tag", filter.value] },
+                                    },
+                                },
+                            },
+                        },
+                        {
+                            $match: {
+                                events: { $ne: [] },
+                            },
+                        }
+                    );
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        const events = await EventModel.aggregate(aggregationPipeline);
+
+        return res.status(200).send(events);
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send({ error: error });
+    }
 });
