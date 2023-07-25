@@ -192,12 +192,20 @@ a {
   justify-content: center;
 }
 
-.content-st {
+.content-fs {
   justify-content: flex-start;
+}
+
+.content-fe {
+  justify-content: flex-end;
 }
 
 .align-ctr {
   align-items: center;
+}
+
+.align-st {
+  align-items: flex-start;
 }
 /*   /FLEXBOX   */
 
