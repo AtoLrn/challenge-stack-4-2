@@ -5,7 +5,7 @@
           <button @click="openPopup">+</button>
       </div>
 
-      <div v-if="!showPopup" class="popup-overlay">
+      <div v-if="showPopup" class="popup-overlay">
         <div class="popup">
           <span class="close" @click="closePopup">&times;</span>
           <form @submit.prevent="addGraph">
