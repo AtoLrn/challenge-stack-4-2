@@ -36,8 +36,8 @@
           <p>Mon profil</p>
         </RouterLink>
       </li>
-      <li>
-        <a class="link-white flex align-ctr" href="#">
+      <li @click.prevent="handleDisconnect">
+        <a class="link-white flex align-ctr">
           <div>
             <i class="fa-solid fa-sign-out"></i>
           </div>
@@ -48,10 +48,14 @@
   </nav>
 </template>
 
-<script>
+<script setup>
+import { deleteToken } from './../utils/token'
 
-export default {
-  name: "NavBar"
+import router from './../router'
+
+const handleDisconnect = () => {
+  deleteToken()
+  router.push('/')
 }
 
 </script>
