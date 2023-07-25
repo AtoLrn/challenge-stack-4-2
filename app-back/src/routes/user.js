@@ -154,27 +154,33 @@ userRouter.get("/:id", checkAuth(false), async (req, res) => {
     }
 });
 
-userRouter.put("/:id", checkAuth(false), async (req, res) => {
+userRouter.put("/", checkAuth(false), async (req, res) => {
     try {
-        if (req.user.role != 1 && req.user.id != req.params.id) {
-            return res.status(403).send({ error: "Higher privileges needed" });
-        }
-
         const user = await userService.findBy({
-            id: req.params.id,
+            id: req.user.id,
         });
 
         if (!user) res.status(404).send({ error: "User not found" });
 
         const { firstname, lastname, email, password } = req.body;
-        const encryptedPassword = await encryptPassword(password);
+
+
+        const updateUser = {
+            firstname, lastname, email
+        };
+
+        if (password) {
+            const encryptedPassword = await encryptPassword(password);
+            updateUser.password = encryptedPassword;
+        }
 
         const updatedUser = await userService.update(
             {
-                id: req.params.id,
+                id: req.user.id,
             },
-            { firstname, lastname, email, password: encryptedPassword }
+            updateUser
         );
+        
         updatedUser.password = null;
         updatedUser.appId = null;
 

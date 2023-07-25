@@ -23,7 +23,7 @@
             </div>
             <div class="flex flex-col">
               <label for="firstname" class="caption c-purple">Prénom</label>
-              <input type="text" id="firstname"   v-model.trim="firstname" required>
+              <input type="text" id="firstname" v-model.trim="firstname" required>
             </div>
           </div>
           <div class="flex flex-col bdr-btm">
@@ -37,11 +37,11 @@
           </div>
           <div class="flex flex-col">
             <label for="company" class="caption c-purple">Nom de société</label>
-            <input type="text" id="company" v-model.trim="company" required>
+            <input type="text" id="company" v-model.trim="company" required readonly>
           </div>
           <div class="flex flex-col bdr-btm">
             <label for="url" class="caption c-purple">Url du site à analyser</label>
-            <input type="text" id="url" v-model.trim="url" required>
+            <input type="text" id="url" v-model.trim="url" required readonly>
           </div>
           <div>
             <p class="title c-indigo">
@@ -50,11 +50,11 @@
           </div>
           <div class="flex flex-col">
             <label for="password" class="caption c-purple">Mot de passe actuel</label>
-            <input type="password" id="password" v-model="password" required>
+            <input type="password" id="password" v-model="password">
           </div>
           <div class="flex flex-col">
             <label for="new-password" class="caption c-purple">Nouveau mot de passe</label>
-            <input type="password" id="new-password" v-model="passwordConfirmation" required>
+            <input type="password" id="new-password" v-model="passwordConfirmation">
           </div>
           <div id="card-bottom">
             <button type="submit" class="btn btn-purple btn-md">Modifier mes informations</button>
@@ -85,12 +85,21 @@ const company = ref(lastValues.societyName)
 const url = ref(lastValues.websiteUrl)
 
 const handleSubmit = async () => {
-  const res = await handleRequest('/auth/login', { json: { email: email.value, password: password.value } }, false)
-  
-  saveToken(res.token)
 
-  router.push('/administration/dashboard')
-}
+  if (password.value !== passwordConfirmation.value) {
+    alert('Password missmatch')
+    return
+  }
+
+  const json = {
+    firsname: firstname.value,
+    lastname: lastname.value,
+    email: email.value,
+    password: password.value
+  }
+
+  await handleRequest('/user', { json }, true, { method: 'put' })
+  }
 </script>
 
 <style scoped lang="scss">

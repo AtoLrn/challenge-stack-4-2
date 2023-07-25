@@ -1,4 +1,4 @@
-export const handleRequest = async (path, body, useCredentials = true) => {
+export const handleRequest = async (path, body, useCredentials = true, { method } = {}) => {
     const headers = useCredentials ? credentials() : {}
 
     if (body){
@@ -8,7 +8,7 @@ export const handleRequest = async (path, body, useCredentials = true) => {
         }
     
         const res = await fetch(`/api${path}`, {
-            method: 'post',
+            method: method ?? 'post',
             body: json ? JSON.stringify(json) : formData,
             headers
         })
