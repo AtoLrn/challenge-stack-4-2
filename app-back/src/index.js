@@ -21,11 +21,11 @@ const apiRouter = new Router();
 // app.use(cors());
 app.use(express.json());
 
-app.get("/", (_, res) => {
+app.use(express.static("public"));
+
+app.get("/health", (_, res) => {
     const end = requestTiming.labels({ path: "test" }).startTimer();
-
-    res.send("Hello world");
-
+    res.sendStatus(200);
     end();
 });
 
