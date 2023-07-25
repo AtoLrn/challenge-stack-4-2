@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 import cors from "cors";
 import { config } from "./env.js";
 import { userService } from "./services/user.js";
@@ -15,6 +15,8 @@ const PORT = config.port || 3000;
 
 export const app = express();
 
+const apiRouter = new Router();
+
 // middlewares
 // app.use(cors());
 app.use(express.json());
@@ -27,7 +29,9 @@ app.get("/", (_, res) => {
     end();
 });
 
-app.get("/metrics", async (_, res) => {
+app.use("/api", apiRouter);
+
+apiRouter.get("/metrics", async (_, res) => {
     console.log("QUERIED");
 
     res.setHeader("Content-Type", register.contentType);
@@ -36,11 +40,11 @@ app.get("/metrics", async (_, res) => {
     requestTiming.reset();
 });
 
-app.use("/auth", authRouter);
-app.use("/user", userRouter);
-app.use("/tag", tagRouter);
+apiRouter.use("/auth", authRouter);
+apiRouter.use("/user", userRouter);
+apiRouter.use("/tag", tagRouter);
 
-app.use("/event", cors(checkIfCorsAllowed), eventRouter);
+apiRouter.use("/event", cors(checkIfCorsAllowed), eventRouter);
 
 // Create default admin
 const admin = await userService.findBy({
