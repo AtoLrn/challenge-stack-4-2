@@ -52,14 +52,15 @@ export class EventCatcher {
             this.#sendEvents()
         };
 
-        const pushState = history.pushState.bind(this);
-        history.pushState = (path, __) => {
-            this.#stackEvent(new NavigateEvent(path))
+        const pushState = history.pushState;
+        const that = this
+        history.pushState = function (path) {
+            pushState.apply(history, arguments);
 
-            this.#stackEvent(new PageLeaveEvent())
-            this.#sendEvents()
-            
-            return pushState(path, __);
+            that.#stackEvent(new NavigateEvent(path.current))
+
+            that.#stackEvent(new PageLeaveEvent())
+            that.#sendEvents()
         };
     }
 
