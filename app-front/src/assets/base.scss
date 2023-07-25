@@ -81,11 +81,11 @@ a {
 
 /*   COLORS   */
 .c-indigo {
-  color: var(--indigo);
+  color: var(--indigo) !important;
 }
 
 .c-purple {
-  color: var(--purple);
+  color: var(--purple) !important;
 }
 /*   /COLORS   */
 
@@ -142,6 +142,19 @@ a {
 /*   /TYPOGRAPHY   */
 
 
+
+/*   SIZES  */
+.w-100 {
+  width: 100%;
+}
+
+.h-100 {
+  height: 100%;
+}
+/*   /SIZES  */
+
+
+
 /*   FLEXBOX   */
 .flex {
   display: flex;
@@ -188,5 +201,6 @@ a {
 /*   /RADIUS   */
 
 
-
-
+.bdr-btm {
+  border-bottom: var(--border);
+}
