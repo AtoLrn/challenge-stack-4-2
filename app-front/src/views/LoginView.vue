@@ -34,7 +34,7 @@ const email = ref()
 const password = ref()
 
 const handleSubmit = async () => {
-  const res = await handleRequest('/auth/login', { email: email.value, password: password.value })
+  const res = await handleRequest('/auth/login', { json: { email: email.value, password: password.value } }, false)
 
   saveToken(res.token)
 

@@ -1,11 +1,14 @@
-export const handleRequest = async (path, body, useCredentials = true) => {
+export const handleRequest = async (path, { json, formData }, useCredentials = true) => {
+    const headers = useCredentials ? credentials() : {}
+
+    if (json) {
+        headers['Content-type'] = 'application/json'
+    }
+
     const res = await fetch(path, {
         method: 'post',
-        body: JSON.stringify(body),
-        headers: {
-            'Content-type': 'application/json',
-            ...(useCredentials ? credentials() : {})
-        }
+        body: json ? JSON.stringify(json) : formData,
+        headers
     })
 
     if (res.status !== 200) {
