@@ -19,6 +19,8 @@ export class EventCatcher {
     #lastTimeout
 
     constructor() {
+        super();
+
         this.#user = this.#getUser()
         this.#page = PageAdapter.getPageInfo()
         this.#device = DeviceAdapter.getDeviceInfo()
@@ -52,7 +54,7 @@ export class EventCatcher {
             this.#sendEvents()
         };
 
-        const pushState = history.pushState.bind(history);
+        const pushState = history.pushState.bind(this);
         history.pushState = (path, __) => {
             this.#stackEvent(new NavigateEvent(path))
 
