@@ -8,6 +8,7 @@ import { NavigateEvent } from "./events/NavigateLeave.event"
 import { PageViewEvent } from "./events/pageView.event"
 import { MouseEvent } from "./events/mouseMove.event"
 import { PageAdapter } from "../adapter/page/page.adapter"
+import { SubmitEvent } from "./events/submit.event"
 
 import { v4 as uuid } from 'uuid'
 

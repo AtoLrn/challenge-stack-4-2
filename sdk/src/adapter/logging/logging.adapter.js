@@ -5,8 +5,6 @@ export class Logging {
     constructor() { }
 
     static pusblish(events) {
-        console.log(JSON.stringify(events, null, 4))
-
         var body = new Blob([JSON.stringify(events)], { type: "application/json", withCredentials: true });
 
         navigator.sendBeacon(Logging.API_URL, body)
