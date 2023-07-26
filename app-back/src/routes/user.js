@@ -11,19 +11,19 @@ export const userRouter = Router();
 userRouter.get("/profile", checkAuth(true), async (req, res) => {
     try {
         const returnedUser = {
-            ...req.user.dataValues
+            ...req.user.dataValues,
         };
 
         delete returnedUser.password;
         delete returnedUser.id;
-        
+
         res.status(200).send(returnedUser);
         return;
     } catch (error) {
         console.log(error);
         return res.status(400).send({ error: error });
     }
-}); 
+});
 
 userRouter.get("/", checkAuth(true), async (_, res) => {
     const end = requestTiming.labels({ path: "get_users" }).startTimer();
@@ -164,9 +164,10 @@ userRouter.put("/", checkAuth(false), async (req, res) => {
 
         const { firstname, lastname, email, password } = req.body;
 
-
         const updateUser = {
-            firstname, lastname, email
+            firstname,
+            lastname,
+            email,
         };
 
         if (password) {
@@ -180,7 +181,7 @@ userRouter.put("/", checkAuth(false), async (req, res) => {
             },
             updateUser
         );
-        
+
         updatedUser.password = null;
         updatedUser.appId = null;
 

@@ -9,17 +9,21 @@ import { PageViewEvent } from "./events/pageView.event"
 import { MouseEvent } from "./events/mouseMove.event"
 import { PageAdapter } from "../adapter/page/page.adapter"
 
+import { v4 as uuid } from 'uuid'
+
 export class EventCatcher {
     #secToMinFactor = 60000
     #events = []
     #user
     #device
     #page
+    #sessionId
 
     #lastTimeout
     #appId
 
     constructor(appId) {
+        this.#sessionId = uuid()
         this.#appId = appId
         this.#user = this.#getUser()
         this.#page = PageAdapter.getPageInfo()
@@ -104,6 +108,7 @@ export class EventCatcher {
     #buildRequest() {
         return {
             appId: this.#appId,
+            sessionId: this.#sessionId,
             user: this.#user,
             page: this.#page,
             device: this.#device,

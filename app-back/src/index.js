@@ -28,8 +28,6 @@ const apiRouter = new Router();
 // app.use(cors());
 app.use(express.json());
 
-
-
 app.use(express.static(__dirname + "../public"));
 
 app.get(/^\/(?!api).*/, function (request, response) {
@@ -42,7 +40,6 @@ app.get(/^\/(?!api).*/, function (request, response) {
     } catch {
         response.sendFile(path.resolve(__dirname, "../public/index.html"));
     }
-
 });
 
 app.use("/api", apiRouter);

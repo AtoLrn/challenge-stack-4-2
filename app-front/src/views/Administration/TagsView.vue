@@ -21,28 +21,18 @@
         <TagsTable />
       </div>
       <div v-else-if="activeTab === 'tunnels'">
-
-        <select>
-          <option value="" selected>Choisir une option</option>
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
+        <select @change="updateGraph">
+          <option value="not-selected" selected>Choisir une option</option>
+          <option v-for="tag in availableTags" :value="tag.name">{{  tag.name  }}</option>
         </select>
 
-        <ModalAlert>
-          <template #activator="{ openModal }">
-            <button title="Open modal" @click="openModal" class="btn btn-md btn-purple">Ouvrir</button>
-          </template>
-          <template #actions="{ closeModal }">
-            <button title="close" @click="closeModal" class="btn btn-md">Fermer</button>
-          </template>
-          <template v-slot:title class="title">Ma super modal</template>
-          <template v-slot:default>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam aspernatur at consequatur molestias possimus ratione repudiandae saepe sapiente? Dolore id illo non odit quae ratione unde? Eius molestias officiis quasi.
-            </p>
-          </template>
-        </ModalAlert>
+        <div v-if="data.length > 1">
+          <SankeyView :data="data" />
+        </div>
+
+        <div  v-else>
+          <p>No data to display</p>
+        </div>
 
 
       </div>
@@ -53,12 +43,26 @@
 
 <script setup>
 import {ref} from "vue";
+import SankeyView from './SankeyView';
+
 import TagsTable from "@/components/TagsTable.vue";
 import ModalAlert from "@/components/ModalAlert.vue";
+import { handleRequest } from "../../utils/request";
+
+const availableTags = await handleRequest('/tag').then(({ data }) => data)
+
+const data = ref([])
 
 const activeTab = ref('tags');
 const changeTab = (tab) => {
   activeTab.value = tab;
+}
+
+const updateGraph = async (value) => {
+  if (value.target.value !== "not-selected") {
+    const fetchedTagTunnel = await handleRequest(`/event/tunnel/${value.target.value}`)
+    data.value = fetchedTagTunnel.data
+  } 
 }
 </script>
 
