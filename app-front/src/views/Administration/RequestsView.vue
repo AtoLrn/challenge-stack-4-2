@@ -14,7 +14,7 @@
         <tr v-if="usersList.data.length === 0">
           <td class="text-ctr" colspan="5">Aucun utilisateur en attente de vérification</td>
         </tr>
-        <tr v-for="user in usersList.data">
+        <tr v-for="user in usersList.data.filter(user => !user.isVerified)">
           <td>{{ user.firstname }}</td>
           <td>{{ user.lastname }}</td>
           <td>{{ user.email }}</td>
@@ -34,13 +34,14 @@
 </template>
 
 <script setup>
-
+import { ref } from 'vue'
 import {handleRequest} from "@/utils/request";
 
-const usersList = await handleRequest('/user');
+const usersList = ref(await handleRequest('/user'))
 
 const verifyUser = async (user) => {
   await handleRequest('/user/verify/' + user, undefined, true, { method: 'PUT' });
+  usersList.value = await handleRequest('/user')
 }
 
 </script>
