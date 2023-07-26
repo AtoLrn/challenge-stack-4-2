@@ -87,20 +87,36 @@ nav {
     margin-bottom: 1rem;
   }
 
-}
+  .link-white {
+    font-family: var(--font-title);
+    font-size: 14px;
 
+    > div {
+      width: 15px;
+    }
 
-.link-white {
-  font-family: var(--font-title);
-  font-size: 14px;
+    > p {
+      margin-left: 1rem;
+    }
 
-  > div {
-    width: 15px;
+    &.router-link-exact-active {
+      color: var(--white);
+      font-weight: 600;
+      text-shadow: 0 0 10px var(--white);
+
+      &:hover {
+        text-shadow: 0 0 10px var(--white);
+      }
+
+      &:first-of-type {
+        border: 0;
+      }
+
+    }
+
   }
 
-  > p {
-    margin-left: 1rem;
-  }
 }
+
 
 </style>
