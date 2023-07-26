@@ -56,6 +56,10 @@ apiRouter.get("/metrics", async (_, res) => {
     requestTiming.reset();
 });
 
+apiRouter.get("/health", (_, res) => {
+    res.sendStatus(200);
+});
+
 apiRouter.use("/auth", authRouter);
 apiRouter.use("/user", userRouter);
 apiRouter.use("/tag", tagRouter);

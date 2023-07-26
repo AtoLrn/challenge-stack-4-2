@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: alorin/backend:latest
+        image: alorin/backend:69bd59399ed2a48573007796cd01573fe337e58f
         env:
         - name: PORT
           value: "3000"
@@ -73,6 +73,6 @@ spec:
         readinessProbe:
           httpGet:
             port: 3000
-            path: /
+            path: /api/health
       terminationGracePeriodSeconds: 60
   minReadySeconds: 60
