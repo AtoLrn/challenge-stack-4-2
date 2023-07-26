@@ -85,33 +85,51 @@ eventRouter.get("/stream", async (req, res) => {
     });
 });
 
-eventRouter.get("/path", checkAuth(false), async (req, res) => {
+eventRouter.get("/:type", checkAuth(false), async (req, res) => {
     try {
-        const paths = await EventModel.aggregate([
-            {
-                $match: {
-                    appId: req.user.appId
-                },
-            },
-            {
-                $project: {
-                    _id: 0,
-                    "page.path": 1
-                }
+        let response;
+        const aggregationPipeline = [{
+            $match: {
+                appId: req.user.appId
             }
-        ]);
+        }];
 
-        const pathsArray = paths.map((event) => event.page.path);
-        const pathResponse = pathsArray.filter((path, index) => pathsArray.indexOf(path) === index);
+        switch(req.params.type){
+            case("path"):
+                aggregationPipeline.push({
+                    $project: {
+                        _id: 0,
+                        "page.path": 1
+                    }
+                });
+                const paths = await EventModel.aggregate(aggregationPipeline);
 
-        return res.status(200).send(pathResponse);
+                const pathsArray = paths.map((event) => event.page.path);
+                response = pathsArray.filter((path, index) => pathsArray.indexOf(path) === index);
+                break;
+
+            case("device"):
+                aggregationPipeline.push({
+                    $project: {
+                        _id: 0,
+                        "device.kind": 1
+                    }
+                });
+                const devices = await EventModel.aggregate(aggregationPipeline);
+
+                const devicesArray = devices.map((event) => event.device.kind);
+                response = devicesArray.filter((device, index) => devicesArray.indexOf(device) === index);
+                break;
+        }
+
+        return res.status(200).send(response);
     } catch(error) {
         console.log(error)
         return res.status(400).send({ error: error });
     }
 })
 
-eventRouter.get("/", checkAuth(false), async (req, res) => {
+eventRouter.post("/filter", checkAuth(false), async (req, res) => {
     try {
         const { dimension, startDate, endDate } = req.body;
 
@@ -124,47 +142,82 @@ eventRouter.get("/", checkAuth(false), async (req, res) => {
         dimension.forEach((filter) => {
             switch (filter.type) {
                 case "path":
-                    aggregationPipeline.push({
-                        $match: {
-                            "page.path": filter.value,
-                        },
-                    });
+                    if(filter.value) {
+                        aggregationPipeline.push({
+                            $match: {
+                                "page.path": filter.value,
+                            },
+                        });
+                    }
                     break;
                 case "device":
-                    aggregationPipeline.push({
-                        $match: {
-                            "device.ua": filter.value,
-                        },
-                    });
+                    if(filter.value) {
+                        aggregationPipeline.push({
+                            $match: {
+                                "device.kind": filter.value,
+                            },
+                        });
+                    }
                     break;
                 case "tag":
-                    aggregationPipeline.push(
-                        {
-                            $addFields: {
-                                events: {
-                                    $filter: {
-                                        input: "$events",
-                                        as: "event",
-                                        cond: { $eq: ["$$event.tag", filter.value] },
+                    if(filter.value) {
+                        aggregationPipeline.push(
+                            {
+                                $addFields: {
+                                    events: {
+                                        $filter: {
+                                            input: "$events",
+                                            as: "event",
+                                            cond: { $eq: ["$$event.tag", filter.value] },
+                                        },
                                     },
                                 },
                             },
-                        },
-                        {
-                            $match: {
-                                events: { $ne: [] },
-                            },
-                        }
-                    );
+                            {
+                                $match: {
+                                    events: { $ne: [] },
+                                },
+                            }
+                        );
+                    }
                     break;
                 default:
                     break;
             }
         });
 
+        // get only events that are inside user choosed timestamp
+        aggregationPipeline.push(
+            {
+                $addFields: {
+                    events: {
+                        $filter: {
+                            input: "$events",
+                            as: "event",
+                            cond: { $and: [
+                                { $gte: ["$$event.time", startDate] },
+                                { $lt: ["$$event.time", endDate] }
+                            ]},
+                        },
+                    },
+                },
+            },
+            {
+                $match: {
+                    events: { $ne: [] },
+                },
+            }
+        );
+
         const events = await EventModel.aggregate(aggregationPipeline);
 
-        return res.status(200).send(events);
+        const eventsResponse = [];
+
+        events.forEach((item) => {
+            eventsResponse.push(...item.events)
+        })
+
+        return res.status(200).send(eventsResponse);
     } catch (error) {
         console.log(error);
         return res.status(400).send({ error: error });
