@@ -24,7 +24,7 @@
             </div>
             
             <div class="filter"> 
-                <label for="filterDevice">Appareils :</label>
+                <label for="filterDevice">Appareil :</label>
                 <select id="filterDevice" v-model="choosedDevice">
                     <option v-bind:value="device"></option>
                     <option v-for="device in devices" v-bind:value="device">{{ device }}</option>
@@ -54,105 +54,112 @@
 
       <ModalAlert>
           <template #activator="{ openModal }">
-            <button title="Open modal" @click="openModal" class="add-graph">Ajouter</button>
+            <div>
+                <button title="Open modal" @click="openModal" class="btn btn-md">Ajouter</button>
+            </div>
           </template>
           <template #actions="{ closeModal }">
             <button title="close" @click="closeModal" class="btn btn-md">Fermer</button>
           </template>
           <template v-slot:title class="title">Ajouter une analyse</template>
-          <template >
-              <form @submit.prevent="addGraph">
-                <label for="graphType">Data :</label>
-                <select id="graphType" v-model="graphType">
-                  <option value="visite">Nb de visite</option>
-                  <option value="page">Pages Vues</option>
-                  <option value="heatmap">Heatmap clicks</option>
-                </select>
+          <template v-slot:default>
+              <form class="graph-create flex flex-col content-sa align-ctr" @submit.prevent="addGraph">
+                <div class="data flex flex-col">
+                    <label for="data-type">Data :</label>
+                    <select required id="data-type" v-model="dataType">
+                      <option value="click">Click</option>
+                      <option value="newVisitor">Nouveaux Visiteurs</option>
+                      <option value="visit">Visites</option>
+                      <option value="submit">Soumissions</option>
+                    </select>
+                </div>
 
-                <label for="graphName">Nom du graphique:</label>
-                <input type="text" id="graphName" v-model="graphName" required>
+                <div class="representation flex flex-col">
+                    <label for="data-repr">Représentation :</label>
+                    <select required id="data-repr" v-model="dataRepr">
+                      <option value="graph">Graphique</option>
+                      <option value="kpi">KPI</option>
+                    </select>
+                </div>
 
-                <button type="submit">Ajouter</button>
+                <div class="name flex flex-col">
+                    <label for="graphName">Nom du graphique:</label>
+                    <input type="text" id="graphName" v-model="graphName" required>
+                </div>
+
+                <div class="send">
+                    <button type="submit" class="btn btn-md">Ajouter</button>
+                </div>
               </form>
           </template>
         </ModalAlert>
   </div>
 </template>
 
-<script>
+<script setup>
 import ModalAlert from "@/components/ModalAlert.vue";
 import { handleRequest } from '../../utils/request'
+import { ref, onMounted } from 'vue'
 
-export default {
-  data() {
-    return {
-      showPopup: false,
-      graphData: "",
-      graphName: "",
-      paths: [],
-      tags: [],
-      devices: [],
-      choosedPath: "",
-      choosedTag: "",
-      choosedDevice: "",
-      startDate: "",
-      endDate: "",
-    };
-  },
-  methods: {
-    async updateData() {
-        const filter = {
-            startDate: new Date(this.startDate).getTime(),
-            endDate: new Date(this.endDate).getTime(),
-            dimension: [
-                {
-                    type: "path",
-                    value: this.choosedPath
-                },
-                {
-                    type: "tag",
-                    value: this.choosedTag
-                },
-                {
-                    type: "device",
-                    value: this.choosedDevice
-                }
-            ]
-        }
-        const res = await handleRequest("/event/filter", { json: filter })
-        console.log(res)
-    },
-    openPopup() {
-      this.showPopup = true;
-    },
-    addGraph() {
-      this.showPopup = false;
-    },
-    closePopup() {
-      this.showPopup = false;
-      graphData = "";
-      graphName = "";
-    },
-  },
-  beforeMount() {
+const graphName = ref()
+const dataType = ref()
+const dataRepr = ref()
+const paths = ref([])
+const tags = ref([])
+const devices = ref([])
+const choosedPath = ref()
+const choosedTag= ref()
+const choosedDevice = ref()
+const startDate = ref()
+const endDate = ref()
+
+onMounted(() => {
     handleRequest("/event/path")
-        .then(data => this.paths = data)
+        .then(data => paths.value = data)
 
     handleRequest("/event/device")
-        .then(data => this.devices = data)
+        .then(data => devices.value = data)
 
     handleRequest("/tag")
         .then(res => {
-            const tags = res.data.map(tag => {
+            const tagsRes = res.data.map(tag => {
               return {
                 name: tag.name,
                 description: tag.description
               };
             });
-            this.tags = tags
+            tags.value = tagsRes
         })
-  }
-};
+})
+
+const updateData = async () => {
+    const filter = {
+        startDate: new Date(startDate.value).getTime(),
+        endDate: new Date(endDate.value).getTime(),
+        dimension: [
+            {
+                type: "path",
+                value: choosedPath.value
+            },
+            {
+                type: "tag",
+                value: choosedTag.value
+            },
+            {
+                type: "device",
+                value: choosedDevice.value
+            }
+        ]
+    }
+    const res = await handleRequest("/event/filter", { json: filter })
+    console.log(res)
+}
+
+const addGraph = async () => {
+    console.log(graphName.value)
+    console.log(dataType.value)
+    console.log(dataRepr.value)
+}
 </script>
 
 <style scoped lang="scss">
@@ -189,88 +196,19 @@ export default {
         width: 100%;
         height: 1px;
         background-color: black;
-        margin-top: 30px;
+        margin: 30px 0;
         opacity: 10%;
     }
 
-    button {
-        cursor: pointer;
-        font-weight: 600;
-        border-radius: 4px;
-        font-size: 15px;
-        height: 30px;
-        background-color: white;
-        color: #9147ff;
-        padding: 0 10px;
-        border: 1px solid #9147ff;
-        transition: background-color 0.3s ease;
+    .graph-create {
+        div {
+            margin: 10px 0;
+            width: 50%;
+        }
 
-        &:hover {
-            background-color: #9147ff;
-            border: none;
-            color: white;
+        .send {
+            text-align: center;
         }
     }
-
-    .popup-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      .popup {
-        position: relative;
-        background-color: #fff;
-        padding: 50px 0;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        width: 400px;
-
-        .close {
-            cursor: pointer;
-            color: red;
-            position: absolute;
-            top: 5px;
-            right: 20px;
-            font-size: 30px;
-        }
-
-        form {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-
-          input {
-            color: black;
-          }
-
-          label {
-            margin-top: 20px;
-          }
-
-          button {
-            background-color: #4caf50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-            margin-top: 30px;
-
-            &:hover {
-              background-color: #45a049;
-            }
-          }
-        }
-      }
-    }
-
 }
 </style>

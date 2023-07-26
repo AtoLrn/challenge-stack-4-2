@@ -206,15 +206,28 @@ eventRouter.post("/filter", checkAuth(false), async (req, res) => {
                 $match: {
                     events: { $ne: [] },
                 },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    "user.id": 1,
+                    events: 1
+                }
             }
         );
 
         const events = await EventModel.aggregate(aggregationPipeline);
 
-        const eventsResponse = [];
-
+        const eventsResponse = {
+            users: [],
+            events: []
+        };
+        
         events.forEach((item) => {
-            eventsResponse.push(...item.events)
+            if (!eventsResponse.users.includes(item.user.id)){
+                eventsResponse.users.push(item.user.id)
+            }
+            eventsResponse.events.push(...item.events)
         })
 
         return res.status(200).send(eventsResponse);
