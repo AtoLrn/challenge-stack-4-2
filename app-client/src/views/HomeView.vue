@@ -8,7 +8,7 @@
             <p>
               Bienvenue chez Quackmart, le paradis des amoureux des canards ! <br>
               Plongez dans notre vaste collection de goodies à l'effigie de ces adorables créatures à plumes.
-              Préparez-vous à quacker de joie en découvrant nos produits !
+              Préparez-vous à <i><b>quacker</b></i> de joie en découvrant nos produits !
             </p>
           </div>
           <div>
@@ -31,7 +31,6 @@
               <button class="btn btn-sm"
                       sdk-id="fa24199695">S'inscrire</button>
             </form>
-
           </div>
         </div>
       </div>
@@ -72,6 +71,10 @@
         flex-direction: column;
         justify-content: space-between;
 
+        b {
+          font-weight: bold !important;
+        }
+
         >div >div:first-child {
           padding-bottom: 2rem;
         }
@@ -107,9 +110,9 @@
           background-color: var(--white);
           border-radius: 8px;
           padding: 20px;
+          box-shadow: var(--shadow);
 
-          h3,
-          p {
+          h3 {
             padding-bottom: 0.5rem;
           }
 
@@ -119,23 +122,31 @@
             align-items: center;
             padding-top: 1rem;
 
-            input {
-              width: 70%;
-              padding: 0.5rem;
-              border-radius: 4px;
-              border: 1px solid var(--divider);
-              transition: all 0.3s ease-in-out;
+            form {
+              width: 100%;
 
-              &:hover {
-                border: 1px solid var(--purple);
+              input {
+                width: 72%;
+                padding: 0.5rem;
+                border-radius: 4px;
+                border: 1px solid var(--divider);
+                margin-right: 3%;
+                color: var(--text);
+                transition: all 0.3s ease-in-out;
+
+                &:hover {
+                  border: 1px solid var(--purple);
+                }
+
+              }
+
+              button {
+                width: 25%;
+                padding: 0.6rem;
               }
 
             }
 
-            button {
-              width: 25%;
-              padding: 0.6rem;
-            }
           }
 
         }
