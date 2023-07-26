@@ -21,7 +21,7 @@ export const handleRequest = async (path, body, useCredentials = true, { method 
         return await res.json()
     } else {
         const res = await fetch(`/api${path}`, {
-            method: 'get',
+            method: method ?? 'get',
             headers
         })
 

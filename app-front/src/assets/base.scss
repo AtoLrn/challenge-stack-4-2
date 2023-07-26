@@ -193,7 +193,7 @@ a {
 }
 
 .content-ctr {
-  justify-content: center;
+  justify-content: center !important;
 }
 
 .content-fs {
@@ -224,15 +224,16 @@ a {
 }
 /*   /RADIUS   */
 
-
+/*    BORDERS   */
 .bdr-btm {
   border-bottom: var(--border);
 }
+/*   /BORDERS   */
 
 
 /*   ALIGNMENTS   */
 .text-ctr {
-  text-align: center;
+  text-align: center !important;
 }
 
 .text-l {

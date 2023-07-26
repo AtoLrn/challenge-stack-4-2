@@ -20,7 +20,11 @@
           <td>{{ user.email }}</td>
           <td>{{ user.societyName }}</td>
           <td>
-            <button class="btn btn-sm" style="margin-right: 0.25rem">Accepter &nbsp;<i class="fa-solid fa-circle-check"></i></button>
+            <button class="btn btn-sm"
+                    style="margin-right: 0.25rem"
+                    @click="verifyUser(user.id)">
+                    Accepter &nbsp;<i class="fa-solid fa-circle-check"></i>
+            </button>
             <button class="btn btn-sm">Refuser &nbsp;<i class="fa-solid fa-circle-xmark"></i></button>
           </td>
         </tr>
@@ -35,9 +39,10 @@ import {handleRequest} from "@/utils/request";
 
 const usersList = await handleRequest('/user');
 
-const tagsList = await handleRequest('/tag');
+const verifyUser = async (user) => {
+  await handleRequest('/user/verify/' + user, undefined, true, { method: 'PUT' });
+}
 
-console.log(tagsList.data);
 </script>
 
 <style scoped>
