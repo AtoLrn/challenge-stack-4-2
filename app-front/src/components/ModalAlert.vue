@@ -36,7 +36,7 @@ function openModal() {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .modal {
   position: fixed;
   top: 0;
