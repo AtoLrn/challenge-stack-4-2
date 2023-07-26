@@ -29,7 +29,7 @@ tagRouter.post("/", checkAuth(false), async (req, res) => {
             name,
             description,
             userId: req.user.id,
-            isDeleted: false
+            isDeleted: false,
         });
 
         return res.status(200).send({
@@ -85,9 +85,12 @@ tagRouter.delete("/:id", checkAuth(false), async (req, res) => {
             return res.status(403).send({ error: "Higher privileges needed" });
         }
 
-        await tagService.update({
-            id: req.params.id,
-        }, { isDeleted: true });
+        await tagService.update(
+            {
+                id: req.params.id,
+            },
+            { isDeleted: true }
+        );
 
         return res.status(200).send({
             msg: "Votre tag a été supprimé.",

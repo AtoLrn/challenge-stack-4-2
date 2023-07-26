@@ -37,11 +37,12 @@ const pageLeaveEvent = T.isObject({
 const navigateEvent = T.isObject({
     ...baseEvent,
     kind: T.isLiteral("navigate"),
-    path: T.isString()
+    path: T.isString(),
 });
 
 export const isEventSchema = T.isObject({
     appId: T.isString(),
+    sessionId: T.isString(),
     user: T.isObject({
         id: T.isString(),
         lastVisit: T.isNumber(),

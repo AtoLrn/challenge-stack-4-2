@@ -1,21 +1,17 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
   labels:
-    app: backend
-  name: backend
+    app: backend-migration
+  name: backend-migration
 spec:
-  selector:
-    matchLabels:
-      app: backend
   template:
-    metadata:
-      labels:
-        app: backend
     spec:
+      restartPolicy: Never
       containers:
-      - name: backend
+      - name: backend-migration
         image: alorin/backend:b8e7df284fa343d577de17a58ceec2165a401d96
+        command: ["npm", "run", "migrate"]
         env:
         - name: PORT
           value: "3000"
@@ -66,7 +62,7 @@ spec:
 
         resources:
           requests:
-            cpu: "512m"
+            cpu: "128m"
         ports:
         - containerPort: 3000
           protocol: TCP
@@ -75,4 +71,3 @@ spec:
             port: 3000
             path: /api/health
       terminationGracePeriodSeconds: 60
-  minReadySeconds: 60

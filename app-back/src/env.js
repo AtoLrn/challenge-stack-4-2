@@ -17,8 +17,8 @@ export const config = {
     },
     ovh: {
         endpoint: process.env.OVH_ENDPOINT,
-        accessKey: process.env.OVH_ACCESS_KEY,
-        secretKey: process.env.OVH_SECRET_KEY,
+        accessKey: process.env.OVH_APP_KEY,
+        secretKey: process.env.OVH_APP_SECRET,
     },
     gmail: {
         user: process.env.GMAIL_USER,
