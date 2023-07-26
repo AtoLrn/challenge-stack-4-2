@@ -220,8 +220,8 @@ eventRouter.get("/tunnel/:tag", checkAuth(false), async (req, res) => {
                     const nextEvent = arr[index + 1];
 
                     if (nextEvent) {
-                        const formattedEventName = `${event.kind} | ${event.tag ?? "Not tagged"}`;
-                        const formattedNextName = `${nextEvent.kind} | ${nextEvent.tag ?? "Not tagged"}`;
+                        const formattedEventName = `${event.kind} | ${(event.kind ? event.tag : event.path)  ?? "Not tagged"}`;
+                        const formattedNextName = `${nextEvent.kind} | ${(nextEvent.kind ? nextEvent.tag : nextEvent.path) ?? "Not tagged"}`;
 
                         const weigths = acc.find(
                             (weigth) => weigth[0] === formattedEventName && weigth[1] === formattedNextName
