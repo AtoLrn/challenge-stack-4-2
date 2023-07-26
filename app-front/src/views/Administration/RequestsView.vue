@@ -21,7 +21,7 @@
           <td>{{ user.email }}</td>
           <td>{{ user.societyName }}</td>
           <td>
-            <button class="btn btn-sm"
+            <button class="btn btn-sm btn-purple"
                     style="margin-right: 0.25rem"
                     @click="verifyUser(user.id)">
                     Accepter &nbsp;<i class="fa-solid fa-circle-check"></i>

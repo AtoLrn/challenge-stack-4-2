@@ -1,17 +1,16 @@
 <template>
 
-    <main class="flex flex-row">
-      <NavBar></NavBar>
-      <div id="content">
-        <Suspense>
+  <main class="flex flex-row">
+    <NavBar></NavBar>
+    <div id="content">
+      <Suspense>
         <router-view></router-view>
-
         <template #fallback>
-        Loading...
-      </template>
-    </Suspense>
-      </div>
-    </main>
+          Loading...
+        </template>
+      </Suspense>
+    </div>
+  </main>
 
 </template>
 
