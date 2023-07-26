@@ -15,8 +15,8 @@ export const eventRouter = Router();
 const eventSubject = new Subject();
 
 export const checkIfCorsAllowed = async (req, callback) => {
-    callback(null, { origin: true, credentials: true });
-    return;
+    console.log("ANTOINE DEBUG 1", req.get("origin"));
+    
 
     if (!req.get("origin")) {
         callback(null, { origin: false });
@@ -24,6 +24,8 @@ export const checkIfCorsAllowed = async (req, callback) => {
     }
 
     const requestOrigin = new URL(req.get("origin"));
+
+    console.log("ANTOINE DEBUG 2", requestOrigin);
 
     if (!requestOrigin) {
         callback(null, { origin: false });
@@ -34,12 +36,16 @@ export const checkIfCorsAllowed = async (req, callback) => {
         websiteUrl: requestOrigin.hostname,
     });
 
+    console.log("ANTOINE DEBUG 3", requestOrigin.hostname, user);
+
     if (!user) {
         callback(null, { origin: false });
         return;
     }
 
-    callback(null, { origin: true, credentials: true });
+    console.log("ANTOINE DEBUG 4");
+
+    callback(null, { origin: requestOrigin.hostname, credentials: true });
 };
 
 eventRouter.post("", async (req, res) => {
