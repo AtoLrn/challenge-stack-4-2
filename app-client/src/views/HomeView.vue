@@ -26,11 +26,10 @@
             Recevez les dernières nouvelles de Quackmart directement dans votre boîte mail.
           </p>
           <div class="input-container">
-            <form action="" sdk-id="fa24199695">
-              <input type="email" placeholder="Votre adresse mail" />
+            <form action="" sdk-id="fa24199695" @submit="handleNewsletter">
+              <input type="text" placeholder="Votre adresse mail" />
               <button class="btn btn-sm"
-                      @click="handleNewsletter"
-                      sdk-id="abcdefg3">S'inscrire</button>
+                      sdk-id="fa24199695">S'inscrire</button>
             </form>
 
           </div>
@@ -45,7 +44,8 @@
 
 <script setup>
 
-  const handleNewsletter = () => {
+  const handleNewsletter = (event) => {
+    event.preventDefault()
     alert('Vous êtes inscrit à la newsletter !')
   }
 

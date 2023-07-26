@@ -57,6 +57,9 @@ export class EventCatcher {
 
             this.#stackEvent(newEvent)
             this.#sendEvents()
+
+            that.#events = []
+            that.#stackEvent(new PageViewEvent())
         };
 
         const pushState = history.pushState;

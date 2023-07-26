@@ -147,9 +147,18 @@ eventRouter.get("/tunnel/:tag", checkAuth(false), async (req, res) => {
             { $unwind: "$events" },
             {
                 $match: {
-                    "events.kind": {
-                        $not: { $eq: "mouse-movement" },
-                    },
+                    $and: [
+                        {
+                            "events.kind": {
+                                $not: { $eq: "mouse-movement" }
+                            }
+                        },
+                        {
+                            "events.kind": {
+                                $not: { $eq: "page-view" }
+                            }
+                        }
+                    ],
                     appId: req.user.appId,
                 },
             },
