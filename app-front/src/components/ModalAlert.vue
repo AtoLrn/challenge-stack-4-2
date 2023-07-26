@@ -4,7 +4,7 @@
   </slot>
   <div class="modal h-100 flex content-ctr align-st" v-show="open">
     <div class="backdrop w-100 h-100" @click="closeModal"></div>
-    <div class="modal-box rad-md w-50">
+    <div class="modal-box rad-md" :class="modalSize">
       <div class="modal-title title text-l bdr-btm">
         <slot name="title">
           <h1>Modal title</h1>
@@ -24,6 +24,15 @@
 
 <script setup>
 import { ref } from 'vue';
+
+defineProps(
+    {
+      modalSize: {
+        type: String,
+        default: 'w-50'
+      },
+    }
+)
 
 const open = ref(false);
 
