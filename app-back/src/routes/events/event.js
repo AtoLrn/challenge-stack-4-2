@@ -187,34 +187,52 @@ eventRouter.post("/filter", checkAuth(false), async (req, res) => {
         });
 
         // get only events that are inside user choosed timestamp
-        aggregationPipeline.push(
-            {
-                $addFields: {
-                    events: {
-                        $filter: {
-                            input: "$events",
-                            as: "event",
-                            cond: { $and: [
-                                { $gte: ["$$event.time", startDate] },
-                                { $lt: ["$$event.time", endDate] }
-                            ]},
+        if (startDate || endDate) {
+            let cond;
+
+            if(startDate && endDate) {
+                cond = { $and: [
+                    { $gte: ["$$event.time", startDate] },
+                    { $lt: ["$$event.time", endDate] }
+                ]}
+            } else if (endDate) {
+                cond = {
+                    $lt: ["$$event.time", endDate]
+                }
+            } else if (startDate) {
+                cond = {
+                    $gte: ["$$event.time", startDate]
+                }
+            }
+
+            aggregationPipeline.push(
+                {
+                    $addFields: {
+                        events: {
+                            $filter: {
+                                input: "$events",
+                                as: "event",
+                                cond: cond
+                            },
                         },
                     },
                 },
-            },
-            {
-                $match: {
-                    events: { $ne: [] },
+                {
+                    $match: {
+                        events: { $ne: [] },
+                    },
                 },
-            },
-            {
+            );
+        }
+
+        aggregationPipeline.push({
                 $project: {
                     _id: 0,
                     "user.id": 1,
                     events: 1
                 }
             }
-        );
+        )
 
         const events = await EventModel.aggregate(aggregationPipeline);
 

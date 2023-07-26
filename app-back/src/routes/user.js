@@ -120,7 +120,7 @@ userRouter.put("/dashboard", checkAuth(false), async (req, res) => {
     try {
         const user = await userService.update(
             {
-                id: req.params.id,
+                id: req.user.id,
             },
             { dashboardOptions: req.body.dashboardOptions }
         );

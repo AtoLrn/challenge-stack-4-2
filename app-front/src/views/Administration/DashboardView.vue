@@ -35,12 +35,12 @@
           <div class="date-filter flex content-sa">
             <div>
                 <label for="start-date">Début :</label>
-                <input id="start-date" required v-model="startDate" type="datetime-local">
+                <input id="start-date" v-model="startDate" type="datetime-local">
             </div>
 
             <div>
                 <label for="end-date">Fin :</label>
-                <input id="end-date" required v-model="endDate" type="datetime-local">
+                <input id="end-date" v-model="endDate" type="datetime-local">
             </div>
           </div>
 
@@ -51,6 +51,23 @@
       </div>
       <div class="filterLine"></div>
 
+      <div class="graph">
+        <div v-for="option in dashboardOptions">
+            <div v-if="option.representation === 'kpi'">
+                <p>{{ parseKpi(option.type, eventData) }}</p>
+                <p>{{ option.name }}</p>
+            </div>
+            <div v-if="option.representation === 'graph'">
+                <GChart 
+                    type="LineChart"
+                    :option="getChartOption(option)" 
+                    :data="parseGraph(option.type, eventData)" 
+                />   
+            </div>
+
+            <button @click="removeGraph(option)">Supprimer</button>
+        </div>
+      </div>
 
       <ModalAlert>
           <template #activator="{ openModal }">
@@ -69,7 +86,7 @@
                     <select required id="data-type" v-model="dataType">
                       <option value="click">Click</option>
                       <option value="newVisitor">Nouveaux Visiteurs</option>
-                      <option value="visit">Visites</option>
+                      <option value="page-view">Visites</option>
                       <option value="submit">Soumissions</option>
                     </select>
                 </div>
@@ -97,10 +114,13 @@
 </template>
 
 <script setup>
+import { GChart } from 'vue-google-charts';
 import ModalAlert from "@/components/ModalAlert.vue";
 import { handleRequest } from '../../utils/request'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue';
+import { parseKpi, parseGraph } from "../../utils/parser";
 
+const dashboardOptions = ref([])
 const graphName = ref()
 const dataType = ref()
 const dataRepr = ref()
@@ -112,6 +132,38 @@ const choosedTag= ref()
 const choosedDevice = ref()
 const startDate = ref()
 const endDate = ref()
+const eventData = ref()
+
+const addGraph = async () => {
+    dashboardOptions.value.push({
+        type: dataType.value,
+        representation: dataRepr.value,
+        name: graphName.value
+    })
+
+    await updateDbDashboard()
+}
+
+const removeGraph = async (option) => {
+    const newOptions = dashboardOptions.value.filter(optionItem => optionItem != option)
+    dashboardOptions.value = newOptions
+
+    await updateDbDashboard()
+}
+
+const updateDbDashboard = async () => {
+    await handleRequest("/user/dashboard", { json: { dashboardOptions: dashboardOptions.value }}, true, { method: "PUT" })
+}
+
+const getChartOption = (option) => {
+    return {
+        chart: {
+            title: option.name,
+            width: 400,
+            height: 200
+        }
+    }
+}
 
 onMounted(() => {
     handleRequest("/event/path")
@@ -130,12 +182,19 @@ onMounted(() => {
             });
             tags.value = tagsRes
         })
+
+    handleRequest("/user/dashboard")
+        .then(data => {
+            dashboardOptions.value = data.data
+            updateData()
+        })
+
 })
 
 const updateData = async () => {
     const filter = {
-        startDate: new Date(startDate.value).getTime(),
-        endDate: new Date(endDate.value).getTime(),
+        startDate: startDate.value ? new Date(startDate.value).getTime() : 0,
+        endDate: endDate.value ? new Date(endDate.value).getTime() : 0,
         dimension: [
             {
                 type: "path",
@@ -152,13 +211,7 @@ const updateData = async () => {
         ]
     }
     const res = await handleRequest("/event/filter", { json: filter })
-    console.log(res)
-}
-
-const addGraph = async () => {
-    console.log(graphName.value)
-    console.log(dataType.value)
-    console.log(dataRepr.value)
+    eventData.value = res
 }
 </script>
 
