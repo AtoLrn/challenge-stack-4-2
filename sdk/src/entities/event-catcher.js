@@ -26,7 +26,7 @@ export class EventCatcher {
         this.#sessionId = uuid()
         this.#appId = appId
         this.#user = this.#getUser()
-        this.#page = PageAdapter.getPageInfo()
+        this.#page = new PageAdapter()
         this.#device = DeviceAdapter.getDeviceInfo()
 
         const newEvent = new PageViewEvent()

@@ -1,7 +1,7 @@
 export class PageAdapter {
     constructor() {}
 
-    static getPageInfo() {
+    toJSON() {
         const windowUrl = window.location.pathname
         const queryParams = new URLSearchParams(window.location.search)
 
