@@ -35,7 +35,7 @@
                 </button>
               </template>
               <template #actions="{ closeModal }">
-                <button title="close" @click="closeModal" class="btn btn-md">Annuler</button>
+                <button title="close" @click="closeModal" class="btn btn-md">Fermer</button>
               </template>
               <template v-slot:title class="title">Modifier un utilisateur</template>
               <template v-slot:default>
@@ -47,16 +47,16 @@
                     <div class="flex flex-row content-sb">
                       <div class="flex flex-col w-48">
                         <label for="lastname" class="caption c-purple">Nom</label>
-                        <input v-model="user.lastname" type="text" id="lastname" required>
+                        <input v-model.trim="user.lastname" type="text" id="lastname" required>
                       </div>
                       <div class="flex flex-col w-48">
                         <label for="firstname" class="caption c-purple">Prénom</label>
-                        <input v-model="user.firstname" type="text" id="firstname" required>
+                        <input v-model.trim="user.firstname" type="text" id="firstname" required>
                       </div>
                     </div>
                     <div class="flex flex-col">
                       <label for="email" class="caption c-purple">Email</label>
-                      <input v-model="user.email" type="email" id="email" required>
+                      <input v-model.trim="user.email" type="email" id="email" required>
                     </div>
                   </div>
                   <div>
@@ -65,15 +65,15 @@
                     </p>
                     <div class="flex flex-col">
                       <label for="company" class="caption c-purple">Nom de société</label>
-                      <input v-model="user.societyName" type="text" id="company" required readonly>
+                      <input v-model.trim="user.societyName" type="text" id="company" required readonly>
                     </div>
                     <div class="flex flex-col">
                       <label for="url" class="caption c-purple">Url du site à analyser</label>
-                      <input v-model="user.websiteUrl"  type="text" id="url" required readonly>
+                      <input v-model.trim="user.websiteUrl" type="text" id="url" required readonly>
                     </div>
                   </div>
                   <div id="card-bottom">
-                    <button type="submit" class="btn btn-purple btn-md">Mettre à jour</button>
+                    <button type="submit" class="btn btn-purple btn-md w-100">Mettre à jour</button>
                   </div>
                 </form>
               </template>
@@ -148,9 +148,14 @@ const tagColour = (status) => {
       padding-bottom: 1rem;
     }
 
+    >div:last-child {
+      padding-top: 1rem;
+    }
+
     p,
     input {
       margin-bottom: 0.75rem;
     }
   }
+
 </style>
