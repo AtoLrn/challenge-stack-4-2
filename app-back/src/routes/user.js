@@ -8,7 +8,7 @@ import crypto from "crypto";
 
 export const userRouter = Router();
 
-userRouter.get("/profile", checkAuth(true), async (req, res) => {
+userRouter.get("/profile", checkAuth(false), async (req, res) => {
     try {
         const returnedUser = {
             ...req.user.dataValues,
