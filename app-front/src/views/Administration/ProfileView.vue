@@ -1,11 +1,33 @@
 <template>
   <div id="right-side" class="flex flex-row content-se align-ctr">
     <div class="h-100 flex flex-col align-ctr content-se">
+      <div>
+        &nbsp;<br>
+        &nbsp;<br>
+      </div>
       <div class="text-ctr">
-        <img src="@/assets/img/profile.png" alt="profile picture" style="width: 300px;" />
+        <img src="../../assets/img/profile.png" alt="profile picture" style="width: 300px;" />
       </div>
       <div id="kbis-container" class="card">
-        <button type="button" class="w-100 btn btn-md">Voir mon fichier Kbis</button>
+        <button type="button" class="w-100 btn btn-md">Voir mon fichier Kbis&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-file"></i></button>
+      </div>
+      <div id="app-id-container" class="card">
+        <ModalAlert modalSize="w-25">
+          <template #activator="{ openModal }">
+            <button @click="openModal" class="w-100 btn btn-md">
+              Voir mon app ID&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-key"></i>
+            </button>
+          </template>
+          <template #actions="{ closeModal }">
+            <button title="close" @click="closeModal" class="btn btn-sm">Fermer</button>
+          </template>
+          <template v-slot:title class="title">Mon application ID</template>
+          <template v-slot:default>
+            <div id="app-id" class="c-indigo text-ctr poppins">
+              {{ generateAppId.data }}
+            </div>
+          </template>
+        </ModalAlert>
       </div>
     </div>
     <div class="flex flex-col">
@@ -72,8 +94,13 @@ import { saveToken } from './../../utils/token'
 import router from './../../router'
 
 import { ref } from 'vue'
+import ModalAlert from "@/components/ModalAlert.vue";
 
-const lastValues = await handleRequest('/user/profile')
+const lastValues = await handleRequest('/user/profile');
+
+const generateAppId = await handleRequest('/user/app-id', {}, true, { method: 'get' })
+
+console.log(generateAppId);
 
 const firstname = ref(lastValues.firstname)
 const lastname = ref(lastValues.lastname)
@@ -112,9 +139,18 @@ const handleSubmit = async () => {
   width: 40%;
 }
 
-#kbis-container {
+#kbis-container,
+#app-id-container{
   text-align: center;
-  padding: 1.5rem;
+  padding: 1.25rem;
+
+  button {
+    padding: 0.75rem 1rem;
+  }
+
+  #app-id {
+    font-size: 16px;
+  }
 }
 
 .card {
