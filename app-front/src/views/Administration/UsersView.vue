@@ -27,8 +27,12 @@
             </p>
           </td>
           <td>
-            <button class="btn btn-sm" style="margin-right: 0.25rem">Modifier &nbsp;<i class="fa-solid fa-pen"></i></button>
-            <button class="btn btn-sm">Supprimer &nbsp;<i class="fa-solid fa-trash"></i></button>
+            <button class="btn btn-sm" style="margin-right: 0.25rem">
+                    Modifier &nbsp;<i class="fa-solid fa-pen"></i>
+            </button>
+            <button class="btn btn-sm"
+                    @click="deleteUser(user.id)">Supprimer &nbsp;<i class="fa-solid fa-trash"></i>
+            </button>
           </td>
         </tr>
       </tbody>
@@ -39,9 +43,14 @@
 <script setup>
 
 import {handleRequest} from "@/utils/request";
+import {ref} from "vue";
 
-const usersList = await handleRequest('/user');
+const usersList = ref(await handleRequest('/user'));
 
+const deleteUser = async (user) => {
+  await handleRequest('/user/' + user, undefined, true, { method: 'DELETE' });
+  usersList.value = await handleRequest('/user');
+}
 
 const tagColour = (status) => {
   return status ? 'tag-verified' : 'tag-pending';

@@ -194,12 +194,8 @@ userRouter.put("/", checkAuth(false), async (req, res) => {
     }
 });
 
-userRouter.delete("/:id", checkAuth(false), async (req, res) => {
+userRouter.delete("/:id", checkAuth(true), async (req, res) => {
     try {
-        // Can't delete user if it's not you and your not admin
-        if (req.user.role != 1 && req.user.id != req.params.id) {
-            return res.status(403).send({ error: "Higher privileges needed" });
-        }
 
         await userService.delete({
             id: req.params.id,
