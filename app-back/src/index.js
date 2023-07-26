@@ -32,7 +32,7 @@ app.use(express.json());
 
 app.use(express.static(__dirname + "../public"));
 
-app.get("^!/api*", function (request, response) {
+app.get(/^\/(?!api).*/, function (request, response) {
     try {
         if (fs.lstatSync(path.resolve(__dirname, "../public/", `./${request.path}`)).isFile()) {
             response.sendFile(path.resolve(__dirname, "../public", `./${request.path}`));
