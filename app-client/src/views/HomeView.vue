@@ -27,7 +27,9 @@
           </p>
           <div class="input-container">
             <input type="email" placeholder="Votre adresse mail" />
-            <button class="btn btn-sm" sdk-id="abcdefg3">S'inscrire</button>
+            <button class="btn btn-sm"
+                    @click="handleNewsletter"
+                    sdk-id="abcdefg3">S'inscrire</button>
           </div>
         </div>
       </div>
@@ -39,6 +41,10 @@
 </template>
 
 <script setup>
+
+  const handleNewsletter = () => {
+    alert('Vous êtes inscrit à la newsletter !')
+  }
 
 </script>
 
@@ -80,8 +86,6 @@
         }
 
         p {
-         /* padding-bottom: 4rem;*/
-
           @media (max-width: 768px) {
             padding-bottom: 1.75rem
           }

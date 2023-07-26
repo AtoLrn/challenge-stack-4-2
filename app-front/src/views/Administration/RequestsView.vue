@@ -11,13 +11,20 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>John</td>
-          <td>Doe</td>
-          <td>johndoe@gmail.com</td>
-          <td>QuackMart</td>
+        <tr v-if="usersList.data.length === 0">
+          <td class="text-ctr" colspan="5">Aucun utilisateur en attente de vérification</td>
+        </tr>
+        <tr v-for="user in usersList.data">
+          <td>{{ user.firstname }}</td>
+          <td>{{ user.lastname }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.societyName }}</td>
           <td>
-            <button class="btn btn-sm" style="margin-right: 0.25rem">Accepter &nbsp;<i class="fa-solid fa-circle-check"></i></button>
+            <button class="btn btn-sm"
+                    style="margin-right: 0.25rem"
+                    @click="verifyUser(user.id)">
+                    Accepter &nbsp;<i class="fa-solid fa-circle-check"></i>
+            </button>
             <button class="btn btn-sm">Refuser &nbsp;<i class="fa-solid fa-circle-xmark"></i></button>
           </td>
         </tr>
@@ -27,6 +34,14 @@
 </template>
 
 <script setup>
+
+import {handleRequest} from "@/utils/request";
+
+const usersList = await handleRequest('/user');
+
+const verifyUser = async (user) => {
+  await handleRequest('/user/verify/' + user, undefined, true, { method: 'PUT' });
+}
 
 </script>
 

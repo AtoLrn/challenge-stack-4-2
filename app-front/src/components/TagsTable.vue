@@ -8,24 +8,16 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
-      <td>
-        <p class="tag">Tag 1</p>
-      </td>
-      <td>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis commodi delectus dolorem explicabo.
-      </td>
-      <td>
-        <button class="btn btn-sm" style="margin-right: 0.25rem">Modifier &nbsp;<i class="fa-solid fa-pen"></i></button>
-        <button class="btn btn-sm">Supprimer &nbsp;<i class="fa-solid fa-trash"></i></button>
-      </td>
+    <tr v-if="tagsList.data.length === 0">
+      <td class="text-ctr" colspan="3">Aucun tag enregistré</td>
     </tr>
-    <tr>
+    <tr v-else
+        v-for="tag in filterDeletedTags(tagsList.data)">
       <td>
-        <p class="tag">Tag 2</p>
+        <p class="tag">{{tag.name}}</p>
       </td>
       <td>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis commodi delectus dolorem explicabo.
+        {{tag.description}}
       </td>
       <td>
         <button class="btn btn-sm" style="margin-right: 0.25rem">Modifier &nbsp;<i class="fa-solid fa-pen"></i></button>
@@ -37,6 +29,14 @@
 </template>
 
 <script setup>
+
+import {handleRequest} from "@/utils/request";
+
+const tagsList = await handleRequest('/tag');
+
+ const filterDeletedTags = (tags) => {
+   return tags.filter(tag => tag.isDeleted === false);
+ }
 
 </script>
 
@@ -79,5 +79,4 @@
     font-size: 12px;
   }
 }
-
 </style>

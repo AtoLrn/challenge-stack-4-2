@@ -12,26 +12,19 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>John</td>
-          <td>Doe</td>
-          <td>johndoe@gmail.com</td>
-          <td>QuackMart</td>
-          <td>
-            <p class="tag tag-verified">Vérifié</p>
-          </td>
-          <td>
-            <button class="btn btn-sm" style="margin-right: 0.25rem">Modifier &nbsp;<i class="fa-solid fa-pen"></i></button>
-            <button class="btn btn-sm">Supprimer &nbsp;<i class="fa-solid fa-trash"></i></button>
-          </td>
+        <tr v-if="usersList.data.length === 0">
+          <td class="text-ctr" colspan="6">Aucun utilisateur enregistré</td>
         </tr>
-        <tr>
-          <td>John</td>
-          <td>Doe</td>
-          <td>johndoe@gmail.com</td>
-          <td>QuackMart</td>
+        <tr v-else
+            v-for="user in usersList.data">
+          <td>{{ user.firstname }}</td>
+          <td>{{ user.lastname }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.societyName }}</td>
           <td>
-            <p class="tag tag-pending">En attente</p>
+            <p class="tag" :class="tagColour(user.isVerified)">
+              {{ user.isVerified ? 'Vérifié' : 'En attente' }}
+            </p>
           </td>
           <td>
             <button class="btn btn-sm" style="margin-right: 0.25rem">Modifier &nbsp;<i class="fa-solid fa-pen"></i></button>
@@ -44,6 +37,15 @@
 </template>
 
 <script setup>
+
+import {handleRequest} from "@/utils/request";
+
+const usersList = await handleRequest('/user');
+
+
+const tagColour = (status) => {
+  return status ? 'tag-verified' : 'tag-pending';
+}
 
 </script>
 

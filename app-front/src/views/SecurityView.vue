@@ -10,7 +10,7 @@
 
         <template #fallback>
         Loading...
-      </template>
+        </template>
     </Suspense>
   </div>
 </main>
