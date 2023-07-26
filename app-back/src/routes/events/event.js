@@ -8,6 +8,8 @@ import { EventModel } from "./../../database/models/Events.js";
 
 import { Subject } from "rxjs";
 
+import cors from "cors";
+
 import UAParser from "ua-parser-js";
 
 export const eventRouter = Router();
@@ -48,7 +50,7 @@ export const checkIfCorsAllowed = async (req, callback) => {
     callback(null, { origin: requestOrigin.hostname, credentials: true });
 };
 
-eventRouter.post("", async (req, res) => {
+eventRouter.post("", cors(checkIfCorsAllowed),async (req, res) => {
     if (!isEventSchema(req.body)) {
         console.log("Received wrong formatted JSON", JSON.stringify(req.body, null, 4));
         res.sendStatus(400);
