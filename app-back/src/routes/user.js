@@ -154,8 +154,12 @@ userRouter.get("/:id", checkAuth(false), async (req, res) => {
     }
 });
 
-userRouter.put("/", checkAuth(false), async (req, res) => {
+userRouter.put("/:id", checkAuth(false), async (req, res) => {
     try {
+        if (req.user.role != 1 && req.params.id !== undefined && req.user.id != req.params.id) {
+            return res.status(403).send({ error: "Higher privileges needed" });
+        }
+
         const user = await userService.findBy({
             id: req.user.id,
         });
@@ -164,9 +168,10 @@ userRouter.put("/", checkAuth(false), async (req, res) => {
 
         const { firstname, lastname, email, password } = req.body;
 
-
         const updateUser = {
-            firstname, lastname, email
+            firstname,
+            lastname,
+            email,
         };
 
         if (password) {
@@ -174,13 +179,14 @@ userRouter.put("/", checkAuth(false), async (req, res) => {
             updateUser.password = encryptedPassword;
         }
 
+
         const updatedUser = await userService.update(
             {
-                id: req.user.id,
+                id: req.params.id ?? req.user.id,
             },
             updateUser
         );
-        
+
         updatedUser.password = null;
         updatedUser.appId = null;
 
