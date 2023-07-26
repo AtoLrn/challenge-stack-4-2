@@ -9,7 +9,7 @@
           <p>Dashboard</p>
         </RouterLink>
       </li>
-      <li>
+      <li v-if="isAdmin">
         <RouterLink :to="{name: 'requests'}" class="link-white flex align-ctr">
           <div>
             <i class="fa-solid fa-user-check"></i>
@@ -17,7 +17,7 @@
           <p>Validations</p>
         </RouterLink>
       </li>
-      <li>
+      <li v-if="isAdmin">
         <RouterLink :to="{name: 'users'}" class="link-white flex align-ctr">
           <div>
             <i class="fa-solid fa-users"></i>
@@ -58,13 +58,17 @@
 
 <script setup>
 import { deleteToken } from './../utils/token'
+import { getRole, deleteRole } from "@/utils/role";
 
 import router from './../router'
 
 const handleDisconnect = () => {
   deleteToken()
+  deleteRole()
   router.push('/')
 }
+
+const isAdmin = getRole() === 'admin';
 
 </script>
 
