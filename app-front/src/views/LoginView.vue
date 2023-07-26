@@ -25,6 +25,7 @@
 <script setup>
 import { handleRequest } from './../utils/request'
 import { saveToken } from './../utils/token'
+import {saveRole} from "./../utils/role";
 
 import router from './../router'
 
@@ -36,7 +37,8 @@ const password = ref()
 const handleSubmit = async () => {
   const res = await handleRequest('/auth/login', { json: { email: email.value, password: password.value } }, false)
 
-  saveToken(res.token)
+  saveToken(res.token);
+  saveRole(res.role);
 
   router.push('/administration/dashboard')
 }

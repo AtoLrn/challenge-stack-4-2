@@ -120,6 +120,7 @@ authRouter.post("/login", async (req, res) => {
         return res.status(200).send({
             msg: "Identification réussie !",
             token: token,
+            role: user.role,
         });
     } catch (error) {
         console.log(error);
