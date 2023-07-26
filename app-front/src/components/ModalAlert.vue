@@ -11,7 +11,7 @@
         </slot>
       </div>
       <div class="modal-content">
-        <slot>Modal content</slot>
+        <slot :closeModal="closeModal">Modal content</slot>
       </div>
       <div class="modal-actions flex content-fe">
         <slot name="actions" :closeModal="closeModal">
@@ -36,7 +36,7 @@ function openModal() {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .modal {
   position: fixed;
   top: 0;
