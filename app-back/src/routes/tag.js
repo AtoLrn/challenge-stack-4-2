@@ -9,7 +9,7 @@ tagRouter.get("/", checkAuth(false), async (req, res) => {
     try {
         const tags = await tagService.findAll({
             userId: req.user.id,
-            isDeleted: false
+            isDeleted: false,
         });
 
         return res.status(200).send({

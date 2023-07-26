@@ -88,19 +88,21 @@ eventRouter.get("/stream", async (req, res) => {
 eventRouter.get("/:type", checkAuth(false), async (req, res) => {
     try {
         let response;
-        const aggregationPipeline = [{
-            $match: {
-                appId: req.user.appId
-            }
-        }];
+        const aggregationPipeline = [
+            {
+                $match: {
+                    appId: req.user.appId,
+                },
+            },
+        ];
 
-        switch(req.params.type){
-            case("path"):
+        switch (req.params.type) {
+            case "path":
                 aggregationPipeline.push({
                     $project: {
                         _id: 0,
-                        "page.path": 1
-                    }
+                        "page.path": 1,
+                    },
                 });
                 const paths = await EventModel.aggregate(aggregationPipeline);
 
@@ -108,12 +110,12 @@ eventRouter.get("/:type", checkAuth(false), async (req, res) => {
                 response = pathsArray.filter((path, index) => pathsArray.indexOf(path) === index);
                 break;
 
-            case("device"):
+            case "device":
                 aggregationPipeline.push({
                     $project: {
                         _id: 0,
-                        "device.kind": 1
-                    }
+                        "device.kind": 1,
+                    },
                 });
                 const devices = await EventModel.aggregate(aggregationPipeline);
 
@@ -123,26 +125,28 @@ eventRouter.get("/:type", checkAuth(false), async (req, res) => {
         }
 
         return res.status(200).send(response);
-    } catch(error) {
-        console.log(error)
+    } catch (error) {
+        console.log(error);
         return res.status(400).send({ error: error });
     }
-})
+});
 
 eventRouter.post("/filter", checkAuth(false), async (req, res) => {
     try {
         const { dimension, startDate, endDate } = req.body;
 
-        const aggregationPipeline = [{
-            $match: {
-                appId: req.user.appId
-            }
-        }];
+        const aggregationPipeline = [
+            {
+                $match: {
+                    appId: req.user.appId,
+                },
+            },
+        ];
 
         dimension.forEach((filter) => {
             switch (filter.type) {
                 case "path":
-                    if(filter.value) {
+                    if (filter.value) {
                         aggregationPipeline.push({
                             $match: {
                                 "page.path": filter.value,
@@ -151,7 +155,7 @@ eventRouter.post("/filter", checkAuth(false), async (req, res) => {
                     }
                     break;
                 case "device":
-                    if(filter.value) {
+                    if (filter.value) {
                         aggregationPipeline.push({
                             $match: {
                                 "device.kind": filter.value,
@@ -160,7 +164,7 @@ eventRouter.post("/filter", checkAuth(false), async (req, res) => {
                     }
                     break;
                 case "tag":
-                    if(filter.value) {
+                    if (filter.value) {
                         aggregationPipeline.push(
                             {
                                 $addFields: {
@@ -190,19 +194,16 @@ eventRouter.post("/filter", checkAuth(false), async (req, res) => {
         if (startDate || endDate) {
             let cond;
 
-            if(startDate && endDate) {
-                cond = { $and: [
-                    { $gte: ["$$event.time", startDate] },
-                    { $lt: ["$$event.time", endDate] }
-                ]}
+            if (startDate && endDate) {
+                cond = { $and: [{ $gte: ["$$event.time", startDate] }, { $lt: ["$$event.time", endDate] }] };
             } else if (endDate) {
                 cond = {
-                    $lt: ["$$event.time", endDate]
-                }
+                    $lt: ["$$event.time", endDate],
+                };
             } else if (startDate) {
                 cond = {
-                    $gte: ["$$event.time", startDate]
-                }
+                    $gte: ["$$event.time", startDate],
+                };
             }
 
             aggregationPipeline.push(
@@ -212,7 +213,7 @@ eventRouter.post("/filter", checkAuth(false), async (req, res) => {
                             $filter: {
                                 input: "$events",
                                 as: "event",
-                                cond: cond
+                                cond: cond,
                             },
                         },
                     },
@@ -221,32 +222,33 @@ eventRouter.post("/filter", checkAuth(false), async (req, res) => {
                     $match: {
                         events: { $ne: [] },
                     },
-                },
+                }
             );
         }
 
         aggregationPipeline.push({
-                $project: {
-                    _id: 0,
-                    "user.id": 1,
-                    events: 1
-                }
-            }
-        )
+            $project: {
+                _id: 0,
+                user: 1,
+                events: 1,
+            },
+        });
 
         const events = await EventModel.aggregate(aggregationPipeline);
 
         const eventsResponse = {
             users: [],
-            events: []
+            events: [],
         };
-        
+
         events.forEach((item) => {
-            if (!eventsResponse.users.includes(item.user.id)){
-                eventsResponse.users.push(item.user.id)
-            }
-            eventsResponse.events.push(...item.events)
-        })
+            eventsResponse.users.push(item.user);
+            eventsResponse.events.push(...item.events);
+        });
+
+        eventsResponse.users = eventsResponse.users.filter((user, index, array) => {
+            return array.findIndex((user2) => user2.id === user.id) === index;
+        });
 
         return res.status(200).send(eventsResponse);
     } catch (error) {

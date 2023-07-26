@@ -42,6 +42,16 @@
                 <label for="end-date">Fin :</label>
                 <input id="end-date" v-model="endDate" type="datetime-local">
             </div>
+
+            <div>
+                <label for="time-step">Step :</label>
+                <select id="time-step" v-model="timeStep">
+                  <option value="300000">5min</option>
+                  <option value="900000">15min</option>
+                  <option value="3600000">1h</option>
+                  <option value="86400000">1j</option>
+                </select>
+            </div>
           </div>
 
           <div class="update flex content-sa">
@@ -51,29 +61,12 @@
       </div>
       <div class="filterLine"></div>
 
-      <div class="graph">
-        <div v-for="option in dashboardOptions">
-            <div v-if="option.representation === 'kpi'">
-                <p>{{ parseKpi(option.type, eventData) }}</p>
-                <p>{{ option.name }}</p>
-            </div>
-            <div v-if="option.representation === 'graph'">
-                <GChart 
-                    type="LineChart"
-                    :option="getChartOption(option)" 
-                    :data="parseGraph(option.type, eventData)" 
-                />   
-            </div>
-
-            <button @click="removeGraph(option)">Supprimer</button>
-        </div>
-      </div>
-
       <ModalAlert>
           <template #activator="{ openModal }">
-            <div>
-                <button title="Open modal" @click="openModal" class="btn btn-md">Ajouter</button>
+            <div class="flex content-ctr">
+                <button title="Open modal" @click="openModal" class="btn btn-md">Ajouter un graph</button>
             </div>
+      <div class="filterLine"></div>
           </template>
           <template #actions="{ closeModal }">
             <button title="close" @click="closeModal" class="btn btn-md">Fermer</button>
@@ -85,7 +78,7 @@
                     <label for="data-type">Data :</label>
                     <select required id="data-type" v-model="dataType">
                       <option value="click">Click</option>
-                      <option value="newVisitor">Nouveaux Visiteurs</option>
+                      <option v-if="dataRepr != 'graph'" value="newVisitor">Nouveaux Visiteurs</option>
                       <option value="page-view">Visites</option>
                       <option value="submit">Soumissions</option>
                     </select>
@@ -94,7 +87,7 @@
                 <div class="representation flex flex-col">
                     <label for="data-repr">Représentation :</label>
                     <select required id="data-repr" v-model="dataRepr">
-                      <option value="graph">Graphique</option>
+                      <option v-if="dataType != 'newVisitor'" value="graph">Graphique</option>
                       <option value="kpi">KPI</option>
                     </select>
                 </div>
@@ -110,6 +103,28 @@
               </form>
           </template>
         </ModalAlert>
+
+      <div class="graph flex flex-col content-ctr">
+        <div class="graph-unit" v-for="option in dashboardOptions">
+            <div class="kpi flex flex-col content-ctr" v-if="option.representation === 'kpi'">
+                <p class="content">{{ parseKpi(option.type, eventData) }}</p>
+                <p>{{ option.name }}</p>
+            </div>
+            <div class="chart" v-if="option.representation === 'graph'">
+                <GChart 
+                    type="LineChart"
+                    :option="getChartOption(option)" 
+                    :data="parseGraph(option.type, eventData, timeStep)" 
+                />   
+                <p>{{ option.name }}</p>
+            </div>
+
+            <div class="add-graph-btn flex content-ctr">
+                <button class="btn btn-md" @click="removeGraph(option)">Supprimer</button>
+            </div>
+            <div class="filterLine"></div>
+        </div>
+      </div>
   </div>
 </template>
 
@@ -133,6 +148,7 @@ const choosedDevice = ref()
 const startDate = ref()
 const endDate = ref()
 const eventData = ref()
+const timeStep = ref("300000")
 
 const addGraph = async () => {
     dashboardOptions.value.push({
@@ -217,6 +233,8 @@ const updateData = async () => {
 
 <style scoped lang="scss">
 #dashboard {
+    overflow: scroll;
+
     h1 {
         margin-bottom: 20px;
     }
@@ -247,10 +265,32 @@ const updateData = async () => {
 
     .filterLine {
         width: 100%;
-        height: 1px;
-        background-color: black;
+        border-bottom: 2px solid black;
         margin: 30px 0;
         opacity: 10%;
+    }
+
+    .graph-unit {
+        .kpi, .chart {
+            text-align: center;
+
+            p {
+                color: black;
+            }
+
+            .content {
+                font-size: 40px;
+            }
+        }
+
+        .add-graph-btn {
+            margin-top: 10px;
+
+            button {
+                text-align: center;
+                background-color: #c21d36;
+            }
+        }
     }
 
     .graph-create {
