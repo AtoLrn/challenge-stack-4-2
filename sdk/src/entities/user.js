@@ -12,17 +12,18 @@ export class User {
             this.#id = uuid()
         }
 
-        if (firstVisit) {
+        if (firstVisit !== undefined) {
             this.#firstVisit = firstVisit
         } else {
             this.#firstVisit = new Date()
         }
 
-        if (lastVisit) {
+        if (lastVisit !== undefined) {
             this.#lastVisit = lastVisit
         } else {
             this.#lastVisit = new Date()
         }
+
     }
 
     get id() {

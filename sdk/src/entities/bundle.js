@@ -2,18 +2,20 @@ export class Bundle {
     #data 
     #lastUpdate
     #key
+    #storageType
 
-    constructor({ data, lastUpdate }, key) {
+    constructor({ data, lastUpdate }, key, storageType = localStorage) {
         this.#data = data
         this.#lastUpdate = lastUpdate
         this.#key = key
+        this.#storageType = storageType
 
         this.#save()
     }
 
 
     #save() {
-        localStorage.setItem(this.#key, JSON.stringify(this))
+        this.#storageType.setItem(this.#key, JSON.stringify(this))
     }
 
     set data(data) {
