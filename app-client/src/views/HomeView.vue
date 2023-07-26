@@ -13,7 +13,7 @@
           </div>
           <div>
             <RouterLink to="/shop">
-              <button id="shop-goodies" class="btn btn-lg" sdk-id="abcdefg2">Parcourir les goodies</button>
+              <button id="shop-goodies" class="btn btn-lg" sdk-id="38c6d6e327">Parcourir les goodies</button>
             </RouterLink>
           </div>
         </div>
@@ -26,10 +26,13 @@
             Recevez les dernières nouvelles de Quackmart directement dans votre boîte mail.
           </p>
           <div class="input-container">
-            <input type="email" placeholder="Votre adresse mail" />
-            <button class="btn btn-sm"
-                    @click="handleNewsletter"
-                    sdk-id="abcdefg3">S'inscrire</button>
+            <form action="" sdk-id="fa24199695">
+              <input type="email" placeholder="Votre adresse mail" />
+              <button class="btn btn-sm"
+                      @click="handleNewsletter"
+                      sdk-id="abcdefg3">S'inscrire</button>
+            </form>
+
           </div>
         </div>
       </div>

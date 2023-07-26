@@ -9,7 +9,7 @@
         <p class="description">{{ goodie.description }}</p>
         <div class="card-bottom">
           <p class="price">{{ goodie.price }} €</p>
-          <button class="btn btn-sm"  @click="toggleReservation(goodie)">
+          <button class="btn btn-sm" :sdk-id="goodie.sdk" @click="toggleReservation(goodie)">
             {{ goodie.reserved ? 'Ne plus réserver ):' : 'Réserver !' }}
           </button>
         </div>
@@ -27,6 +27,7 @@ export default {
     return {
       goodies: [
         {
+          sdk: '610c1203ce',
           picture: '/src/assets/img/army.jpeg',
           title: 'Boîte de poussins doux',
           description: 'Une armée de poussins jaune, rien que pour vous.',
