@@ -27,8 +27,62 @@
             </p>
           </td>
           <td>
-            <button class="btn btn-sm" style="margin-right: 0.25rem">Modifier &nbsp;<i class="fa-solid fa-pen"></i></button>
-            <button class="btn btn-sm">Supprimer &nbsp;<i class="fa-solid fa-trash"></i></button>
+
+            <ModalAlert>
+              <template #activator="{ openModal }">
+                <button title="Open modal" @click="openModal" class="btn btn-sm btn-purple" style="margin-right: 0.25rem">
+                  Modifier&nbsp;&nbsp;<i class="fa-solid fa-pen"></i>
+                </button>
+              </template>
+              <template #actions="{ closeModal }">
+                <button title="close" @click="closeModal" class="btn btn-md">Fermer</button>
+              </template>
+              <template v-slot:title class="title">Modifier un utilisateur</template>
+              <template v-slot:default>
+                <form id="update-form" @submit.prevent="handleSubmit(user)">
+                  <div>
+                    <p class="title c-indigo">
+                      Informations personnelles
+                    </p>
+                    <div class="flex flex-row content-sb">
+                      <div class="flex flex-col w-48">
+                        <label for="lastname" class="caption c-purple">Nom</label>
+                        <input v-model.trim="user.lastname" type="text" id="lastname" required>
+                      </div>
+                      <div class="flex flex-col w-48">
+                        <label for="firstname" class="caption c-purple">Prénom</label>
+                        <input v-model.trim="user.firstname" type="text" id="firstname" required>
+                      </div>
+                    </div>
+                    <div class="flex flex-col">
+                      <label for="email" class="caption c-purple">Email</label>
+                      <input v-model.trim="user.email" type="email" id="email" required>
+                    </div>
+                  </div>
+                  <div>
+                    <p class="title c-indigo">
+                      Entreprise & Site
+                    </p>
+                    <div class="flex flex-col">
+                      <label for="company" class="caption c-purple">Nom de société</label>
+                      <input v-model.trim="user.societyName" type="text" id="company" required readonly>
+                    </div>
+                    <div class="flex flex-col">
+                      <label for="url" class="caption c-purple">Url du site à analyser</label>
+                      <input v-model.trim="user.websiteUrl" type="text" id="url" required readonly>
+                    </div>
+                  </div>
+                  <div id="card-bottom">
+                    <button type="submit" class="btn btn-purple btn-md w-100">Mettre à jour</button>
+                  </div>
+                </form>
+              </template>
+            </ModalAlert>
+
+            <button class="btn btn-sm"
+                    @click="deleteUser(user.id)">Supprimer &nbsp;<i class="fa-solid fa-trash"></i>
+            </button>
+
           </td>
         </tr>
       </tbody>
@@ -39,9 +93,29 @@
 <script setup>
 
 import {handleRequest} from "@/utils/request";
+import {ref} from "vue";
+import ModalAlert from "@/components/ModalAlert.vue";
 
-const usersList = await handleRequest('/user');
+const usersList = ref(await handleRequest('/user'));
 
+const deleteUser = async (user) => {
+  await handleRequest('/user/' + user, undefined, true, { method: 'DELETE' });
+  usersList.value = await handleRequest('/user');
+}
+
+const handleSubmit = async (editUser) => {
+
+  const json = {
+    firstname: editUser.firstname,
+    lastname: editUser.lastname,
+    email: editUser.email,
+    societyName: editUser.societyName,
+    websiteUrl: editUser.websiteUrl
+  }
+
+  await handleRequest('/user/' + editUser.id, { json }, true, { method: 'put' });
+
+}
 
 const tagColour = (status) => {
   return status ? 'tag-verified' : 'tag-pending';
@@ -68,4 +142,20 @@ const tagColour = (status) => {
     }
 
   }
+
+  #update-form {
+    >div:first-child {
+      padding-bottom: 1rem;
+    }
+
+    >div:last-child {
+      padding-top: 1rem;
+    }
+
+    p,
+    input {
+      margin-bottom: 0.75rem;
+    }
+  }
+
 </style>

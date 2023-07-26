@@ -5,13 +5,13 @@
   <div class="modal h-100 flex content-ctr align-st" v-show="open">
     <div class="backdrop w-100 h-100" @click="closeModal"></div>
     <div class="modal-box rad-md w-50">
-      <div class="modal-title title">
+      <div class="modal-title title text-l bdr-btm">
         <slot name="title">
           <h1>Modal title</h1>
         </slot>
       </div>
-      <div class="modal-content">
-        <slot :closeModal="closeModal">Modal content</slot>
+      <div class="modal-content text-l">
+        <slot>Modal content</slot>
       </div>
       <div class="modal-actions flex content-fe">
         <slot name="actions" :closeModal="closeModal">
@@ -60,16 +60,16 @@ function openModal() {
     overflow: hidden;
 
     .modal-title {
-      padding: 1rem 1rem 0 1rem;
+      padding: 1rem 1.5rem;
       font-size: 18px;
     }
 
     .modal-content {
-      padding: 1rem;
+      padding: 1rem 1.5rem;
     }
 
     .modal-actions {
-      padding: 1rem;
+      padding: 1rem 1.5rem;
       border-top: var(--border);
     }
 

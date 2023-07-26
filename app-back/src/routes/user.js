@@ -154,8 +154,12 @@ userRouter.get("/:id", checkAuth(false), async (req, res) => {
     }
 });
 
-userRouter.put("/", checkAuth(false), async (req, res) => {
+userRouter.put("/:id", checkAuth(false), async (req, res) => {
     try {
+        if (req.user.role != 1 && req.params.id !== undefined && req.user.id != req.params.id) {
+            return res.status(403).send({ error: "Higher privileges needed" });
+        }
+
         const user = await userService.findBy({
             id: req.user.id,
         });
@@ -175,9 +179,10 @@ userRouter.put("/", checkAuth(false), async (req, res) => {
             updateUser.password = encryptedPassword;
         }
 
+
         const updatedUser = await userService.update(
             {
-                id: req.user.id,
+                id: req.params.id ?? req.user.id,
             },
             updateUser
         );
@@ -195,12 +200,8 @@ userRouter.put("/", checkAuth(false), async (req, res) => {
     }
 });
 
-userRouter.delete("/:id", checkAuth(false), async (req, res) => {
+userRouter.delete("/:id", checkAuth(true), async (req, res) => {
     try {
-        // Can't delete user if it's not you and your not admin
-        if (req.user.role != 1 && req.user.id != req.params.id) {
-            return res.status(403).send({ error: "Higher privileges needed" });
-        }
 
         await userService.delete({
             id: req.params.id,
