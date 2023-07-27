@@ -8,6 +8,7 @@ import UsersView from "@/views/Administration/UsersView.vue";
 import ProfileView from "@/views/Administration/ProfileView.vue";
 import RequestsView from "@/views/Administration/RequestsView.vue";
 import TagsView from "@/views/Administration/TagsView.vue";
+import HeatmapVue from '@/views/Administration/Heatmap.vue';
 import { getToken } from '../utils/token';
 import { getRole } from '../utils/role';
 
@@ -69,6 +70,12 @@ const router = createRouter({
                     path: 'profile',
                     name: 'profile',
                     component: ProfileView,
+                    meta: { connected: true }
+                },
+                {
+                    path: 'heatmap',
+                    name: 'heatmap',
+                    component: HeatmapVue,
                     meta: { connected: true }
                 }
             ]

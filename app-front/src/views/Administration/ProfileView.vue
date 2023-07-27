@@ -9,7 +9,7 @@
         <img src="../../assets/img/profile.png" alt="profile picture" style="width: 300px;" />
       </div>
       <div id="kbis-container" class="card">
-        <button type="button" class="w-100 btn btn-md">Voir mon fichier Kbis&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-file"></i></button>
+        <button type="button" @click="downloadKbisFile" class="w-100 btn btn-md">Voir mon fichier Kbis&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-file"></i></button>
       </div>
       <div id="app-id-container" class="card">
         <ModalAlert modalSize="w-25">
@@ -89,9 +89,6 @@
 
 <script setup>
 import { handleRequest } from './../../utils/request'
-import { saveToken } from './../../utils/token'
-
-import router from './../../router'
 
 import { ref } from 'vue'
 import ModalAlert from "@/components/ModalAlert.vue";
@@ -110,6 +107,12 @@ const passwordConfirmation = ref()
 
 const company = ref(lastValues.societyName)
 const url = ref(lastValues.websiteUrl)
+const kbisFileUrl = ref(lastValues.kbisFileUrl)
+console.log(lastValues)
+
+const downloadKbisFile = () => {
+  window.location.href = kbisFileUrl.value
+}
 
 const handleSubmit = async () => {
 
