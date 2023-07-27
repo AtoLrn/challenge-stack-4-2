@@ -39,7 +39,7 @@ export const checkIfCorsAllowed = async (req, callback) => {
     callback(null, { origin: true, credentials: true });
 };
 
-eventRouter.post("",async (req, res) => {
+eventRouter.post("", async (req, res) => {
     if (!isEventSchema(req.body)) {
         console.log("Received wrong formatted JSON", JSON.stringify(req.body, null, 4));
         res.sendStatus(400);
@@ -97,7 +97,7 @@ eventRouter.get("/:type", checkAuth(false), async (req, res) => {
         ];
 
         switch (req.params.type) {
-            case "path":
+            case "path": {
                 aggregationPipeline.push({
                     $project: {
                         _id: 0,
@@ -109,8 +109,9 @@ eventRouter.get("/:type", checkAuth(false), async (req, res) => {
                 const pathsArray = paths.map((event) => event.page.path);
                 response = pathsArray.filter((path, index) => pathsArray.indexOf(path) === index);
                 break;
+            }
 
-            case "device":
+            case "device": {
                 aggregationPipeline.push({
                     $project: {
                         _id: 0,
@@ -121,6 +122,9 @@ eventRouter.get("/:type", checkAuth(false), async (req, res) => {
 
                 const devicesArray = devices.map((event) => event.device.kind);
                 response = devicesArray.filter((device, index) => devicesArray.indexOf(device) === index);
+                break;
+            }
+            default:
                 break;
         }
 
@@ -266,14 +270,14 @@ eventRouter.get("/tunnel/:tag", checkAuth(false), async (req, res) => {
                     $and: [
                         {
                             "events.kind": {
-                                $not: { $eq: "mouse-movement" }
-                            }
+                                $not: { $eq: "mouse-movement" },
+                            },
                         },
                         {
                             "events.kind": {
-                                $not: { $eq: "page-view" }
-                            }
-                        }
+                                $not: { $eq: "page-view" },
+                            },
+                        },
                     ],
                     appId: req.user.appId,
                 },
@@ -342,8 +346,12 @@ eventRouter.get("/tunnel/:tag", checkAuth(false), async (req, res) => {
                     const nextEvent = arr[index + 1];
 
                     if (nextEvent) {
-                        const formattedEventName = `${event.kind} | ${(event.kind !== "navigate" ? event.tag : event.path)  ?? "Not tagged"}`;
-                        const formattedNextName = `${nextEvent.kind} | ${(nextEvent.kind !== "navigate" ? nextEvent.tag : nextEvent.path) ?? "Not tagged"}`;
+                        const formattedEventName = `${event.kind} | ${
+                            (event.kind !== "navigate" ? event.tag : event.path) ?? "Not tagged"
+                        }`;
+                        const formattedNextName = `${nextEvent.kind} | ${
+                            (nextEvent.kind !== "navigate" ? nextEvent.tag : nextEvent.path) ?? "Not tagged"
+                        }`;
 
                         const weigths = acc.find(
                             (weigth) => weigth[0] === formattedEventName && weigth[1] === formattedNextName
