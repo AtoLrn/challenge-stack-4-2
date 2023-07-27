@@ -46,7 +46,7 @@ eventRouter.post("", async (req, res) => {
             res.sendStatus(400);
             return false;
         }
-    
+
         const parser = new UAParser(req.body.device.ua);
         const uaParsedInfo = {
             browser: {
@@ -55,23 +55,22 @@ eventRouter.post("", async (req, res) => {
             os: parser.getOS().name ?? "unkonwn",
             kind: parser.getDevice().type ?? "unkonwn",
         };
-    
+
         req.body.device = {
             ...req.body.device,
             ...uaParsedInfo,
         };
-    
+
         const event = req.body;
-    
+
         EventModel.create(event);
-    
+
         eventSubject.next(event);
-    
+
         res.sendStatus(200);
     } catch (error) {
-        res.status(400).send({error});
+        res.status(400).send({ error });
     }
-
 });
 
 eventRouter.get("/stream", checkAuth(false), async (req, res) => {
@@ -81,20 +80,19 @@ eventRouter.get("/stream", checkAuth(false), async (req, res) => {
             "Cache-Control": "no-cache",
             "Content-Type": "text/event-stream",
         });
-        
+
         const subscription = eventSubject.subscribe(async () => {
             const eventsResponse = await makeEventFilteredRequest(JSON.parse(req.headers.request), req);
-    
+
             res.write(`data: ${JSON.stringify(eventsResponse)}\n\n`);
         });
-    
+
         res.on("close", () => {
             subscription.unsubscribe();
         });
     } catch (error) {
-        res.status(400).send({error});
+        res.status(400).send({ error });
     }
-
 });
 
 eventRouter.get("/:type", checkAuth(false), async (req, res) => {
@@ -275,8 +273,7 @@ eventRouter.get("/tunnel/:tag", checkAuth(false), async (req, res) => {
     }
 });
 
-
-const makeEventFilteredRequest = async  ({ dimension, startDate, endDate } = { dimension: []}, req) => {
+const makeEventFilteredRequest = async ({ dimension, startDate, endDate } = { dimension: [] }, req) => {
     const aggregationPipeline = [
         {
             $match: {
@@ -372,6 +369,7 @@ const makeEventFilteredRequest = async  ({ dimension, startDate, endDate } = { d
         $project: {
             _id: 0,
             user: 1,
+            "page.window": 1,
             events: 1,
         },
     });
@@ -385,7 +383,8 @@ const makeEventFilteredRequest = async  ({ dimension, startDate, endDate } = { d
 
     events.forEach((item) => {
         eventsResponse.users.push(item.user);
-        eventsResponse.events.push(...item.events);
+        const eventBis = item.events.map((e) => ({ ...e, window: item.page.window }));
+        eventsResponse.events.push(...eventBis);
     });
 
     eventsResponse.users = eventsResponse.users.filter((user, index, array) => {

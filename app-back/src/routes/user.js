@@ -81,11 +81,9 @@ userRouter.put("/verify/:id", checkAuth(true), async (req, res) => {
 
 userRouter.get("/app-id", checkAuth(false), async (req, res) => {
     try {
-        const user = await userService.findBy(
-            {
-                id: req.user.id,
-            }
-        );
+        const user = await userService.findBy({
+            id: req.user.id,
+        });
 
         return res.status(200).send({
             data: user.appId,
