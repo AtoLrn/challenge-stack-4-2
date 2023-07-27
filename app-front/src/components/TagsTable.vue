@@ -20,7 +20,7 @@
         {{tag.description}}
       </td>
       <td>
-        <button class="btn btn-sm" style="margin-right: 0.25rem">Modifier &nbsp;<i class="fa-solid fa-pen"></i></button>
+        <button class="btn btn-sm btn-purple" style="margin-right: 0.25rem">Modifier &nbsp;<i class="fa-solid fa-pen"></i></button>
         <button class="btn btn-sm">Supprimer &nbsp;<i class="fa-solid fa-trash"></i></button>
       </td>
     </tr>

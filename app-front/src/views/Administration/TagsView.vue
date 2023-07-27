@@ -52,7 +52,7 @@
           <SankeyView :data="data" />
         </div>
 
-        <div v-else>
+        <div v-else class="mt-3">
           <p>Aucune donnée à afficher</p>
         </div>
 

@@ -119,7 +119,7 @@
                 <p>{{ option.name }}</p>
             </div>
 
-            <div class="add-graph-btn flex content-ctr text-ctr">
+            <div class="add-graph-btn flex content-ctr text-ctr mt-3">
                 <button class="btn btn-md btn-purple" @click="removeGraph(option)">Supprimer</button>
             </div>
             <div class="filterLine"></div>
