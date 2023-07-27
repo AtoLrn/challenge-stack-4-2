@@ -65,14 +65,14 @@ export class EventCatcher {
         const pushState = history.pushState;
         const that = this
         history.pushState = function (path) {
-            pushState.apply(history, arguments);
-
             that.#stackEvent(new NavigateEvent(path.current))
             that.#stackEvent(new PageLeaveEvent())
             that.#sendEvents()
 
             that.#events = []
             that.#stackEvent(new PageViewEvent())
+            
+            pushState.apply(history, arguments);
         };
     }
 
