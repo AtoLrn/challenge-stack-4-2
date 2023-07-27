@@ -67,7 +67,7 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res) => {
             websiteUrl: new URL(websiteUrl).hostname,
             kbisFileUrl: `https://challenge-stack.s3.gra.io.cloud.ovh.net/${fileName}`,
             role: 2,
-            dashboardOptions: JSON.stringify({}),
+            dashboardOptions: JSON.stringify([]),
         });
 
         const mail = {
