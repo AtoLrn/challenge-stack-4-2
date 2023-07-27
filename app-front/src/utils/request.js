@@ -47,6 +47,8 @@ export const sseRequest = (body, callback) => {
         if (callback) 
         callback(JSON.parse(e.data))
     }
+
+    return sse
 }
 
 const credentials = () => {
