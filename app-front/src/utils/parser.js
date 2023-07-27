@@ -13,7 +13,11 @@ export const parseKpi = (type, data) => {
 }
 
 export const parseGraph = (type, data, timeStep) => {
+    if(!data || !data.events.length) return [["Data", type], [0,0]]
+    
     const events = data.events.filter(event => event.kind === type)
+    
+    if(!events.length) return [["Data", type], [0,0]]
 
     events.sort((a, b) => a.time - b.time)
     const timeGap = events[events.length - 1].time - events[0].time
