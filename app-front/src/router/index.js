@@ -8,6 +8,8 @@ import UsersView from "@/views/Administration/UsersView.vue";
 import ProfileView from "@/views/Administration/ProfileView.vue";
 import RequestsView from "@/views/Administration/RequestsView.vue";
 import TagsView from "@/views/Administration/TagsView.vue";
+import { getToken } from '../utils/token';
+import { getRole } from '../utils/role';
 
 
 const router = createRouter({
@@ -42,31 +44,51 @@ const router = createRouter({
                 {
                     path: 'dashboard',
                     name: 'dashboard',
-                    component: DashboardView
+                    component: DashboardView,
+                    meta: { connected: true }
                 },
                 {
                     path: 'users',
                     name: 'users',
-                    component: UsersView
+                    component: UsersView,
+                    meta: { isAdmin: true }
                 },
                 {
                     path: 'requests',
                     name: 'requests',
-                    component: RequestsView
+                    component: RequestsView,
+                    meta: { isAdmin: true, connected: true }
                 },
                 {
                     path: 'tags',
                     name: 'tags',
-                    component: TagsView
+                    component: TagsView,
+                    meta: { connected: true }
                 },
                 {
                     path: 'profile',
                     name: 'profile',
-                    component: ProfileView
+                    component: ProfileView,
+                    meta: { connected: true }
                 }
             ]
         }
     ]
+})
+
+router.beforeEach((to, from, next) => {
+    const isAdmin = to.matched.some(destination => destination.meta.isAdmin)
+    const isConnected = to.matched.some(destination => destination.meta.connected)
+    
+    console.log('ANTOINE', getToken())
+
+    if (isAdmin && getRole() === 'user') {
+        next({ name: 'dashboard' })
+    } else if (!getToken() && isConnected) {
+        next({ name: 'login' })
+    } else {
+        next()
+    }
 })
 
 export default router
