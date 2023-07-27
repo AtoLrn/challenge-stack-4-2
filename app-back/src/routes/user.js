@@ -120,7 +120,7 @@ userRouter.put("/dashboard", checkAuth(false), async (req, res) => {
     try {
         const user = await userService.update(
             {
-                id: req.params.id,
+                id: req.user.id,
             },
             { dashboardOptions: req.body.dashboardOptions }
         );
@@ -179,7 +179,6 @@ userRouter.put("/:id", checkAuth(false), async (req, res) => {
             updateUser.password = encryptedPassword;
         }
 
-
         const updatedUser = await userService.update(
             {
                 id: req.params.id ?? req.user.id,
@@ -202,7 +201,6 @@ userRouter.put("/:id", checkAuth(false), async (req, res) => {
 
 userRouter.delete("/:id", checkAuth(true), async (req, res) => {
     try {
-
         await userService.delete({
             id: req.params.id,
         });
