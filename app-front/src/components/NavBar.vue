@@ -9,6 +9,14 @@
           <p>Dashboard</p>
         </RouterLink>
       </li>
+      <li>
+        <RouterLink :to="{name: 'heatmap'}" class="link-white flex align-ctr">
+          <div>
+            <i class="fa-solid fa-layer-group"></i>
+          </div>
+          <p>Heatmap</p>
+        </RouterLink>
+      </li>
       <li v-if="isAdmin">
         <RouterLink :to="{name: 'requests'}" class="link-white flex align-ctr">
           <div>
