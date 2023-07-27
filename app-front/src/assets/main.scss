@@ -83,13 +83,16 @@ input {
       outline: none;
   }
 
+  &[type="datetime-local"] {
+    font-family: 'Helvetica Neue', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', sans-serif;
+  }
 }
 /*   /INPUTS   */
 
 
 /*   SELECTS   */
 select {
-  background-color: #f2f2f2;
+  background-color: var(--white);
   border: 0.75px solid var(--divider);
   padding: 8px;
   border-radius: var(--radius-small);

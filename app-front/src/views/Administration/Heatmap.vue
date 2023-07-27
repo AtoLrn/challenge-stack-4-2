@@ -1,10 +1,9 @@
 <template>
   <div id="heatmap" class="card flex flex-col">
-      <h1 class="text-ctr">Heatmap</h1>
 
     <div class="filter"> 
-        <label for="filterPath">URL :</label>
-        <select @change="onSelectUpdate" id="filterPath" v-model="choosedPath">
+        <label for="filterPath" class="title c-indigo">Choisissez un URL :</label>
+        <select @change="onSelectUpdate" id="filterPath" class="w-25" v-model="choosedPath">
             <option v-for="path in paths" v-bind:value="path">{{ path }}</option>
         </select>
     </div>
@@ -19,10 +18,10 @@
             </iframe>
             <div ref="clickMap" class="click-heatmap flex content-ctr">
             </div>
-            <p>Clicks</p>
+            <h3 class="mt-2 title">Heatmap des clics</h3>
         </div>
 
-        <div class="filterLine"></div>
+        <div class="filterLine w-100"></div>
 
         <div class="heatmap-container flex flex-col align-ctr">
             <iframe
@@ -31,9 +30,9 @@
                 width="100%"
             >
             </iframe>
-            <div ref="movementMap" class="movement-heatmap">
+            <div ref="movementMap" class="movement-heatmap w-100">
             </div>
-            <p>Mouvements de souris</p>
+            <h3 class="mt-2 title">Heatmap des mouvements de souris</h3>
         </div>
     </div>
   </div>
@@ -100,12 +99,13 @@ onMounted(async () => {
 #heatmap {
     overflow-y: scroll;
 
-    h1 {
-        margin-bottom: 20px;
+    .filter {
+      label {
+        padding-right: 0.5rem;
+      }
     }
 
     .filterLine {
-        width: 100%;
         border-bottom: 2px solid black;
         margin: 30px 0;
         opacity: 10%;
@@ -117,13 +117,13 @@ onMounted(async () => {
         .heatmap-container {
             position: relative;
 
-            p {
-                text-align: center;
-                font-size: 15px;
+            iframe {
+              border-width: unset;
+              border-style: unset;
             }
 
             .click-heatmap, .movement-heatmap {
-                border: 1px solid black;
+                border: 0.75px solid var(--indigo);
                 height: 1000px;
                 width: 100%;
                 position: absolute !important;

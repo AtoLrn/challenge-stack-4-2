@@ -37,7 +37,6 @@
       
       <div v-if="activeTab === 'tags'">
         <TagsTable />
-
       </div>
       <div v-else-if="activeTab === 'tunnels'">
         <select @change="updateGraph">
@@ -52,8 +51,6 @@
         <div v-else class="mt-3">
           <p>Aucune donnée à afficher</p>
         </div>
-
-
       </div>
     </div>
 

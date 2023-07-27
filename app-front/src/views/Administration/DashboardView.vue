@@ -64,7 +64,7 @@
       <ModalAlert>
           <template #activator="{ openModal }">
             <div class="flex content-ctr">
-                <button title="Open modal" @click="openModal" class="btn btn-md">Ajouter un graph</button>
+                <button title="Open modal" @click="openModal" class="btn btn-lg">Ajouter un graphique</button>
             </div>
       <div class="filterLine"></div>
           </template>
@@ -73,8 +73,9 @@
           </template>
           <template v-slot:title class="title">Ajouter une analyse</template>
           <template v-slot:default>
-              <form class="graph-create flex flex-col content-sa align-ctr w-50" @submit.prevent="addGraph">
-                <div class="data flex flex-col">
+              <form class="graph-create flex flex-col" @submit.prevent="addGraph">
+                <div class="flex flex-row content-sb align-ctr">
+                  <div class="data flex flex-col">
                     <label for="data-type">Data :</label>
                     <select required id="data-type" v-model="dataType">
                       <option value="click">Click</option>
@@ -82,23 +83,24 @@
                       <option value="page-view">Visites</option>
                       <option value="submit">Soumissions</option>
                     </select>
-                </div>
+                  </div>
 
-                <div class="representation flex flex-col">
+                  <div class="representation flex flex-col">
                     <label for="data-repr">Représentation :</label>
                     <select required id="data-repr" v-model="dataRepr">
                       <option v-if="dataType != 'newVisitor'" value="graph">Graphique</option>
                       <option value="kpi">KPI</option>
                     </select>
-                </div>
+                  </div>
 
-                <div class="name flex flex-col">
-                    <label for="graphName">Nom du graphique:</label>
+                  <div class="name flex flex-col">
+                    <label for="graphName">Nom du graphique :</label>
                     <input type="text" id="graphName" v-model="graphName" required>
+                  </div>
                 </div>
 
-                <div class="send text-ctr">
-                    <button type="submit" class="btn btn-md">Ajouter</button>
+                <div class="send text-ctr mt-3">
+                    <button type="submit" class="btn btn-md btn-purple w-100">Ajouter</button>
                 </div>
               </form>
           </template>
@@ -119,7 +121,7 @@
                 <p>{{ option.name }}</p>
             </div>
 
-            <div class="add-graph-btn flex content-ctr text-ctr mt-3">
+            <div v-if="option.length !== 0" class="add-graph-btn flex content-ctr text-ctr mt-3">
                 <button class="btn btn-md btn-purple" @click="removeGraph(option)">Supprimer</button>
             </div>
             <div class="filterLine"></div>
@@ -294,9 +296,22 @@ const updateData = async () => {
     }
 
     .graph-create {
-        div {
-            margin: 10px 0;
-        }
+
+      label {
+        color: var(--indigo);
+        margin-bottom: 0.25rem;
+      }
+
+      >div:first-child >div:not(:last-child) {
+        width: 25%;
+      }
+
+      >div:first-child >div:last-child {
+        width: 40%;
+      }
+
     }
 }
+
+
 </style>
