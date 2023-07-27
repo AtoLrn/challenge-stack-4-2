@@ -1,8 +1,8 @@
 import { verifyToken } from "../utils/auth.js";
 import { userService } from "../services/user.js";
 
-export const checkAuth = (needAdmin) => async (req, res, next) => {
-    const token = req.headers.authorization;
+export const checkAuth = (needAdmin, body) => async (req, res, next) => {
+    const token = body ? req.body.token : req.headers.authorization;
 
     if (!token) {
         return res.status(401).send({ error: "Token needed" });

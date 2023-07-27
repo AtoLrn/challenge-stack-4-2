@@ -69,20 +69,29 @@ eventRouter.post("", async (req, res) => {
     res.sendStatus(200);
 });
 
-eventRouter.get("/stream", async (req, res) => {
-    res.writeHead(200, {
-        Connection: "keep-alive",
-        "Cache-Control": "no-cache",
-        "Content-Type": "text/event-stream",
-    });
+eventRouter.get("/stream", checkAuth(false), async (req, res) => {
+    try {
+        res.writeHead(200, {
+            Connection: "keep-alive",
+            "Cache-Control": "no-cache",
+            "Content-Type": "text/event-stream",
+        });
+    
+        res.write(`data: ${JSON.stringify({ state: "ready" })}\n\n`);
+    
+        const subscription = eventSubject.subscribe(async () => {
+            const eventsResponse = await makeEventFilteredRequest(JSON.parse(req.headers.request), req);
+    
+            res.write(`data: ${JSON.stringify(eventsResponse)}\n\n`);
+        });
+    
+        res.on("close", () => {
+            subscription.unsubscribe();
+        });
+    } catch (error) {
+        res.status(400).send({error});
+    }
 
-    const subscription = eventSubject.subscribe((data) => {
-        res.write(`data: ${JSON.stringify(data)}\n\n`);
-    });
-
-    res.on("close", () => {
-        subscription.unsubscribe();
-    });
 });
 
 eventRouter.get("/:type", checkAuth(false), async (req, res) => {
@@ -137,123 +146,7 @@ eventRouter.get("/:type", checkAuth(false), async (req, res) => {
 
 eventRouter.post("/filter", checkAuth(false), async (req, res) => {
     try {
-        const { dimension, startDate, endDate } = req.body;
-
-        const aggregationPipeline = [
-            {
-                $match: {
-                    appId: req.user.appId,
-                },
-            },
-        ];
-
-        dimension.forEach((filter) => {
-            switch (filter.type) {
-                case "path":
-                    if (filter.value) {
-                        aggregationPipeline.push({
-                            $match: {
-                                "page.path": filter.value,
-                            },
-                        });
-                    }
-                    break;
-                case "device":
-                    if (filter.value) {
-                        aggregationPipeline.push({
-                            $match: {
-                                "device.kind": filter.value,
-                            },
-                        });
-                    }
-                    break;
-                case "tag":
-                    if (filter.value) {
-                        aggregationPipeline.push(
-                            {
-                                $addFields: {
-                                    events: {
-                                        $filter: {
-                                            input: "$events",
-                                            as: "event",
-                                            cond: { $eq: ["$$event.tag", filter.value] },
-                                        },
-                                    },
-                                },
-                            },
-                            {
-                                $match: {
-                                    events: { $ne: [] },
-                                },
-                            }
-                        );
-                    }
-                    break;
-                default:
-                    break;
-            }
-        });
-
-        // get only events that are inside user choosed timestamp
-        if (startDate || endDate) {
-            let cond;
-
-            if (startDate && endDate) {
-                cond = { $and: [{ $gte: ["$$event.time", startDate] }, { $lt: ["$$event.time", endDate] }] };
-            } else if (endDate) {
-                cond = {
-                    $lt: ["$$event.time", endDate],
-                };
-            } else if (startDate) {
-                cond = {
-                    $gte: ["$$event.time", startDate],
-                };
-            }
-
-            aggregationPipeline.push(
-                {
-                    $addFields: {
-                        events: {
-                            $filter: {
-                                input: "$events",
-                                as: "event",
-                                cond: cond,
-                            },
-                        },
-                    },
-                },
-                {
-                    $match: {
-                        events: { $ne: [] },
-                    },
-                }
-            );
-        }
-
-        aggregationPipeline.push({
-            $project: {
-                _id: 0,
-                user: 1,
-                events: 1,
-            },
-        });
-
-        const events = await EventModel.aggregate(aggregationPipeline);
-
-        const eventsResponse = {
-            users: [],
-            events: [],
-        };
-
-        events.forEach((item) => {
-            eventsResponse.users.push(item.user);
-            eventsResponse.events.push(...item.events);
-        });
-
-        eventsResponse.users = eventsResponse.users.filter((user, index, array) => {
-            return array.findIndex((user2) => user2.id === user.id) === index;
-        });
-
+        const eventsResponse = await makeEventFilteredRequest(req.body, req);
         return res.status(200).send(eventsResponse);
     } catch (error) {
         console.log(error);
@@ -378,3 +271,123 @@ eventRouter.get("/tunnel/:tag", checkAuth(false), async (req, res) => {
         return res.status(400).send({ error: error });
     }
 });
+
+
+const makeEventFilteredRequest = async  ({ dimension, startDate, endDate } = { dimension: []}, req) => {
+    const aggregationPipeline = [
+        {
+            $match: {
+                appId: req.user.appId,
+            },
+        },
+    ];
+
+    dimension.forEach((filter) => {
+        switch (filter.type) {
+            case "path":
+                if (filter.value) {
+                    aggregationPipeline.push({
+                        $match: {
+                            "page.path": filter.value,
+                        },
+                    });
+                }
+                break;
+            case "device":
+                if (filter.value) {
+                    aggregationPipeline.push({
+                        $match: {
+                            "device.kind": filter.value,
+                        },
+                    });
+                }
+                break;
+            case "tag":
+                if (filter.value) {
+                    aggregationPipeline.push(
+                        {
+                            $addFields: {
+                                events: {
+                                    $filter: {
+                                        input: "$events",
+                                        as: "event",
+                                        cond: { $eq: ["$$event.tag", filter.value] },
+                                    },
+                                },
+                            },
+                        },
+                        {
+                            $match: {
+                                events: { $ne: [] },
+                            },
+                        }
+                    );
+                }
+                break;
+            default:
+                break;
+        }
+    });
+
+    // get only events that are inside user choosed timestamp
+    if (startDate || endDate) {
+        let cond;
+
+        if (startDate && endDate) {
+            cond = { $and: [{ $gte: ["$$event.time", startDate] }, { $lt: ["$$event.time", endDate] }] };
+        } else if (endDate) {
+            cond = {
+                $lt: ["$$event.time", endDate],
+            };
+        } else if (startDate) {
+            cond = {
+                $gte: ["$$event.time", startDate],
+            };
+        }
+
+        aggregationPipeline.push(
+            {
+                $addFields: {
+                    events: {
+                        $filter: {
+                            input: "$events",
+                            as: "event",
+                            cond: cond,
+                        },
+                    },
+                },
+            },
+            {
+                $match: {
+                    events: { $ne: [] },
+                },
+            }
+        );
+    }
+
+    aggregationPipeline.push({
+        $project: {
+            _id: 0,
+            user: 1,
+            events: 1,
+        },
+    });
+
+    const events = await EventModel.aggregate(aggregationPipeline);
+
+    const eventsResponse = {
+        users: [],
+        events: [],
+    };
+
+    events.forEach((item) => {
+        eventsResponse.users.push(item.user);
+        eventsResponse.events.push(...item.events);
+    });
+
+    eventsResponse.users = eventsResponse.users.filter((user, index, array) => {
+        return array.findIndex((user2) => user2.id === user.id) === index;
+    });
+
+    return eventsResponse;
+};

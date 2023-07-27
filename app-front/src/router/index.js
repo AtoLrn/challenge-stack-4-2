@@ -76,12 +76,10 @@ const router = createRouter({
     ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _, next) => {
     const isAdmin = to.matched.some(destination => destination.meta.isAdmin)
     const isConnected = to.matched.some(destination => destination.meta.connected)
     
-    console.log('ANTOINE', getToken())
-
     if (isAdmin && getRole() === 'user') {
         next({ name: 'dashboard' })
     } else if (!getToken() && isConnected) {

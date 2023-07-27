@@ -8,6 +8,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "browser-assert": "^1.2.1",
+    "event-source-polyfill": "^1.0.31",
+    "eventsource": "^2.0.2",
     "vue": "^3.3.4",
     "vue-google-charts": "^1.1.0",
     "vue-router": "^4.2.4"

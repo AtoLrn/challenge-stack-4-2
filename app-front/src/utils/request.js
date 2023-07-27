@@ -1,3 +1,5 @@
+import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
+
 export const handleRequest = async (path, body, useCredentials = true, { method } = {}) => {
     const headers = useCredentials ? credentials() : {}
 
@@ -34,6 +36,17 @@ export const handleRequest = async (path, body, useCredentials = true, { method 
     }
 
 
+}
+
+export const sseRequest = (body, callback) => {
+    const sse = new EventSourcePolyfill("/api/event/stream", {
+        headers: { ...credentials(), request: JSON.stringify(body)},
+    });
+
+    sse.onmessage = (e) => {
+        if (callback) 
+        callback(JSON.parse(e.data))
+    }
 }
 
 const credentials = () => {

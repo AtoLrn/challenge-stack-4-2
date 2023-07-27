@@ -131,7 +131,7 @@
 <script setup>
 import { GChart } from 'vue-google-charts';
 import ModalAlert from "@/components/ModalAlert.vue";
-import { handleRequest } from '../../utils/request'
+import { handleRequest, sseRequest } from '../../utils/request'
 import { ref, onMounted } from 'vue';
 import { parseKpi, parseGraph } from "../../utils/parser";
 
@@ -149,6 +149,8 @@ const startDate = ref()
 const endDate = ref()
 const eventData = ref()
 const timeStep = ref("300000")
+
+let sseListener = undefined
 
 const addGraph = async () => {
     dashboardOptions.value.push({
@@ -226,9 +228,22 @@ const updateData = async () => {
             }
         ]
     }
+
+    if (sseListener) {
+        sseListener.close()
+    }
+
     const res = await handleRequest("/event/filter", { json: filter })
+    
+    const callback = (data) => {
+        console.log(data)
+        eventData.value = data
+    }
+
+    sseListener = sseRequest(filter, callback)
+    
     eventData.value = res
-}
+    }
 </script>
 
 <style scoped lang="scss">
