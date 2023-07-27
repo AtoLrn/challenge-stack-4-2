@@ -1,11 +1,15 @@
 <template>
   <div id="dashboard" class="card flex flex-col">
-      <h1 class="text-ctr">Dashboard</h1>
-
-        <div class="top-container flex flex-col">
+      <div class="top-container flex flex-col w-100">
         <form @submit.prevent="updateData">
-          <div class="filter-container flex content-sa">
-            <div class="filter"> 
+          <div class="flex flex-row content-sb align-ctr pb-4">
+            <h2 class="title">Personnalisation du dashbaord</h2>
+            <div class="update text-r">
+              <button class="btn btn-lg" type="submit">Actualiser&nbsp;&nbsp;<i class="fa-solid fa-arrows-rotate"></i></button>
+            </div>
+          </div>
+          <div class="filter-container flex content-sb">
+            <div class="filter flex flex-col">
                 <label for="filterPath">URL :</label>
                 <select id="filterPath" v-model="choosedPath">
                     <option v-bind:value="path"></option>
@@ -13,7 +17,7 @@
                 </select>
             </div>
 
-            <div class="filter"> 
+            <div class="filter flex flex-col">
                 <label for="filterTag">Tag :</label>
                 <select id="filterTag" v-model="choosedTag">
                     <option v-bind:value="tag"></option>
@@ -23,7 +27,7 @@
                 </select>
             </div>
             
-            <div class="filter"> 
+            <div class="filter flex flex-col">
                 <label for="filterDevice">Appareil :</label>
                 <select id="filterDevice" v-model="choosedDevice">
                     <option v-bind:value="device"></option>
@@ -32,30 +36,26 @@
             </div>
           </div>
 
-          <div class="date-filter flex content-sa">
-            <div>
-                <label for="start-date">Début :</label>
+          <div class="date-filter flex content-sb">
+            <div class="filter flex flex-col">
+                <label for="start-date">Début : </label>
                 <input id="start-date" v-model="startDate" type="datetime-local">
             </div>
 
-            <div>
-                <label for="end-date">Fin :</label>
+            <div class="filter flex flex-col">
+                <label for="end-date">Fin : </label>
                 <input id="end-date" v-model="endDate" type="datetime-local">
             </div>
 
-            <div>
-                <label for="time-step">Step :</label>
+            <div class="filter flex flex-col">
+                <label for="time-step">Step : </label>
                 <select id="time-step" v-model="timeStep">
-                  <option value="300000">5min</option>
-                  <option value="900000">15min</option>
-                  <option value="3600000">1h</option>
-                  <option value="86400000">1j</option>
+                  <option value="300000">5 minutes</option>
+                  <option value="900000">15 minutes</option>
+                  <option value="3600000">1 heure</option>
+                  <option value="86400000">1 jour</option>
                 </select>
             </div>
-          </div>
-
-          <div class="update flex content-sa">
-              <button class="btn btn-md" type="submit">Update</button>
           </div>
         </form>
       </div>
@@ -73,7 +73,7 @@
           </template>
           <template v-slot:title class="title">Ajouter une analyse</template>
           <template v-slot:default>
-              <form class="graph-create flex flex-col content-sa align-ctr" @submit.prevent="addGraph">
+              <form class="graph-create flex flex-col content-sa align-ctr w-50" @submit.prevent="addGraph">
                 <div class="data flex flex-col">
                     <label for="data-type">Data :</label>
                     <select required id="data-type" v-model="dataType">
@@ -97,7 +97,7 @@
                     <input type="text" id="graphName" v-model="graphName" required>
                 </div>
 
-                <div class="send">
+                <div class="send text-ctr">
                     <button type="submit" class="btn btn-md">Ajouter</button>
                 </div>
               </form>
@@ -119,8 +119,8 @@
                 <p>{{ option.name }}</p>
             </div>
 
-            <div class="add-graph-btn flex content-ctr">
-                <button class="btn btn-md" @click="removeGraph(option)">Supprimer</button>
+            <div class="add-graph-btn flex content-ctr text-ctr">
+                <button class="btn btn-md btn-purple" @click="removeGraph(option)">Supprimer</button>
             </div>
             <div class="filterLine"></div>
         </div>
@@ -250,31 +250,19 @@ const updateData = async () => {
 #dashboard {
     overflow: scroll;
 
-    h1 {
-        margin-bottom: 20px;
-    }
+    .top-container {
 
-    .top-container{
-        .filter-container {
-            width: 100%;
-
-            .filter {
-
-                select{
-                    margin-left: 10px;
-                }
-
-            }
+        label {
+          color: var(--indigo);
+          margin-bottom: 0.25rem;
         }
 
         .date-filter {
             margin-top: 30px;
         }
 
-        .update {
-            button {
-                margin-top: 10px;
-            }
+        form > div > div {
+            width: 30%;
         }
     }
 
@@ -299,11 +287,8 @@ const updateData = async () => {
         }
 
         .add-graph-btn {
-            margin-top: 10px;
-
             button {
                 text-align: center;
-                background-color: #c21d36;
             }
         }
     }
@@ -311,11 +296,6 @@ const updateData = async () => {
     .graph-create {
         div {
             margin: 10px 0;
-            width: 50%;
-        }
-
-        .send {
-            text-align: center;
         }
     }
 }
