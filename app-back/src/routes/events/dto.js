@@ -62,7 +62,7 @@ export const isEventSchema = T.isObject({
         connection: T.isOptional(
             T.isObject({
                 speed: T.isNumber(),
-                type: T.isString(),
+                kind: T.isString(),
             })
         ),
     }),

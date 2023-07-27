@@ -6,7 +6,7 @@ export class DeviceAdapter {
             ua: navigator.userAgent,
             connection: navigator.connection ? {
                 speed: navigator.connection.downlink,
-                type: navigator.connection.type
+                kind: navigator.connection.type
             } : undefined,
         }
     }

@@ -27,7 +27,7 @@ export const EventsSchema = new Schema({
         ua: String,
         connection: {
             speed: Number,
-            type: String,
+            kind: String,
         },
         browser: {
             name: String,

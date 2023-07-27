@@ -40,33 +40,38 @@ export const checkIfCorsAllowed = async (req, callback) => {
 };
 
 eventRouter.post("", async (req, res) => {
-    if (!isEventSchema(req.body)) {
-        console.log("Received wrong formatted JSON", JSON.stringify(req.body, null, 4));
-        res.sendStatus(400);
-        return false;
+    try {
+        if (!isEventSchema(req.body)) {
+            console.log("Received wrong formatted JSON", JSON.stringify(req.body, null, 4));
+            res.sendStatus(400);
+            return false;
+        }
+    
+        const parser = new UAParser(req.body.device.ua);
+        const uaParsedInfo = {
+            browser: {
+                name: parser.getBrowser().name ?? "unkonwn",
+            },
+            os: parser.getOS().name ?? "unkonwn",
+            kind: parser.getDevice().type ?? "unkonwn",
+        };
+    
+        req.body.device = {
+            ...req.body.device,
+            ...uaParsedInfo,
+        };
+    
+        const event = req.body;
+    
+        EventModel.create(event);
+    
+        eventSubject.next(event);
+    
+        res.sendStatus(200);
+    } catch (error) {
+        res.status(400).send({error});
     }
 
-    const parser = new UAParser(req.body.device.ua);
-    const uaParsedInfo = {
-        browser: {
-            name: parser.getBrowser().name ?? "unkonwn",
-        },
-        os: parser.getOS().name ?? "unkonwn",
-        kind: parser.getDevice().type ?? "unkonwn",
-    };
-
-    req.body.device = {
-        ...req.body.device,
-        ...uaParsedInfo,
-    };
-
-    const event = req.body;
-
-    EventModel.create(event);
-
-    eventSubject.next(event);
-
-    res.sendStatus(200);
 });
 
 eventRouter.get("/stream", checkAuth(false), async (req, res) => {
