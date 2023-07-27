@@ -90,7 +90,7 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res) => {
             msg: "Votre compte a été crée !",
         });
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return res.status(400).send({ error: error });
     } finally {
         end();

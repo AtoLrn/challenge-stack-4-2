@@ -248,7 +248,7 @@ const updateData = async () => {
 
 <style scoped lang="scss">
 #dashboard {
-    overflow: scroll;
+    overflow-y: scroll;
 
     .top-container {
 

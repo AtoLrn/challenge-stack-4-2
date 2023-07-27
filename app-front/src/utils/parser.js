@@ -1,40 +1,34 @@
-export const parseHeatmap = (data) => {
-    const clickArray = data.events.filter(event => event.kind === "click")
-    const movementArray = data.events.filter(event => event.kind === "mouse-movement")
+export const parseHeatmap = (data, type, height, width) => {
+    const bufferArray = data.events.filter(event => event.kind === type)
+    const mainArray = bufferArray.map(event => {
+        return {
+            y: Math.round(height * event.y / event.window.height),
+            x: Math.round(width * event.x / event.window.width)
+        }
+    })
 
-    const clickData = []
-    for(let i = 0; i < clickArray.length; i++) {
-        const indexIfExisting = clickData.findIndex(data => data.x === clickArray[i].x && data.y === clickArray[i].y)
+    const resData = []
+    for(let i = 0; i < mainArray.length; i++) {
+        const indexIfExisting = resData.findIndex(data => data.x === mainArray[i].x && data.y === mainArray[i].y)
 
         if (indexIfExisting >= 0) {
-            clickData[indexIfExisting].value += 1
+            resData[indexIfExisting].value += 1
         } else {
-            clickData.push({
-                x: clickArray[i].x,
-                y: clickArray[i].y,
+            resData.push({
+                x: mainArray[i].x,
+                y: mainArray[i].y,
                 value: 1
             })
         }
     }
-
-    const movementData = []
-    for(let i = 0; i < movementArray.length; i++) {
-        const indexIfExisting = movementData.findIndex(data => data.x === movementArray[i].x && data.y === movementArray[i].y)
-
-        if (indexIfExisting >= 0) {
-            movementData[indexIfExisting].value += 1
-        } else {
-            movementData.push({
-                x: movementArray[i].x,
-                y: movementArray[i].y,
-                value: 1
-            })
-        }
-    }
+    let max = 0
+    resData.forEach(data => {
+        max = Math.max(max, data.value)
+    })
 
     return {
-        click: clickData,
-        movement: movementData
+        max: max,
+        data: resData
     }
 }
 
