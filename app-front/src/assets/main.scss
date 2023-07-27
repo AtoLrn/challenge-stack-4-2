@@ -90,11 +90,11 @@ input {
 /*   SELECTS   */
 select {
   background-color: #f2f2f2;
-  border: 1px solid var(--divider);
+  border: 0.75px solid var(--divider);
   padding: 8px;
   border-radius: var(--radius-small);
   color: var(--text);
-  transition: var(--purple);
+  transition: var(--transition);
 
   option {
     background-color: var(--white);
@@ -108,8 +108,9 @@ select {
     }
   }
 
+  &:hover,
   &:focus {
-    border-color: var(--purple);
+    border: 0.75px solid var(--purple);
     outline: none;
   }
 
