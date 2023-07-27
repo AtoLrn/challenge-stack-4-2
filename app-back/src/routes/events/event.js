@@ -76,9 +76,7 @@ eventRouter.get("/stream", checkAuth(false), async (req, res) => {
             "Cache-Control": "no-cache",
             "Content-Type": "text/event-stream",
         });
-    
-        res.write(`data: ${JSON.stringify({ state: "ready" })}\n\n`);
-    
+        
         const subscription = eventSubject.subscribe(async () => {
             const eventsResponse = await makeEventFilteredRequest(JSON.parse(req.headers.request), req);
     
