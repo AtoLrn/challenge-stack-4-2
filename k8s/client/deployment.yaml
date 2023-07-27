@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: front
+  name: front
+spec:
+  selector:
+    matchLabels:
+      app: front
+  template:
+    metadata:
+      labels:
+        app: front
+    spec:
+      containers:
+      - name: front
+        image: alorin/client-front:0.0.1
+        resources:
+          requests:
+            cpu: "128m"
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            port: 80
+            path: /
+      terminationGracePeriodSeconds: 60
+  minReadySeconds: 60

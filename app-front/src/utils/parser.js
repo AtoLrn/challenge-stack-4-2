@@ -1,3 +1,43 @@
+export const parseHeatmap = (data) => {
+    const clickArray = data.events.filter(event => event.kind === "click")
+    const movementArray = data.events.filter(event => event.kind === "mouse-movement")
+
+    const clickData = []
+    for(let i = 0; i < clickArray.length; i++) {
+        const indexIfExisting = clickData.findIndex(data => data.x === clickArray[i].x && data.y === clickArray[i].y)
+
+        if (indexIfExisting >= 0) {
+            clickData[indexIfExisting].value += 1
+        } else {
+            clickData.push({
+                x: clickArray[i].x,
+                y: clickArray[i].y,
+                value: 1
+            })
+        }
+    }
+
+    const movementData = []
+    for(let i = 0; i < movementArray.length; i++) {
+        const indexIfExisting = movementData.findIndex(data => data.x === movementArray[i].x && data.y === movementArray[i].y)
+
+        if (indexIfExisting >= 0) {
+            movementData[indexIfExisting].value += 1
+        } else {
+            movementData.push({
+                x: movementArray[i].x,
+                y: movementArray[i].y,
+                value: 1
+            })
+        }
+    }
+
+    return {
+        click: clickData,
+        movement: movementData
+    }
+}
+
 export const parseKpi = (type, data) => {
     let kpi;
 

@@ -33,7 +33,7 @@
       </div>
       <div class="flex flex-col">
         <label for="kbis" class="caption c-purple">Kbis</label>
-        <input type="file" id="kbis" required style="display: none" @change="onChangeKbis">
+        <input type="file" id="kbis" accept="application/pdf" style="display: none" @change="onChangeKbis">
         <label for="kbis" id="kbis-btn" class="btn btn-md">Choisir un fichier</label>
       </div>
       <div id="card-bottom" class="flex flex-row align-ctr content-sb">
@@ -72,6 +72,27 @@ const onChangeKbis = (changeEvent) => {
 }
 
 const handleSubmit = async () => {
+  if (password.value != passwordConfirmation.value) {
+    alert("Vos mots de passe ne matchent pas")
+    return
+  }
+
+  if (password.value.length < 8) {
+    alert("Votre mot de passe doit contenir minimum 8 charactères")
+    return
+  }
+
+  const regex = new RegExp('^(https?:\\/\\/)((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|((\\d{1,3}\\.){3}\\d{1,3}))(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*(\\?[;&a-z\\d%_.~+=-]*)?(\\#[-a-z\\d_]*)?$','i');
+  if(!regex.test(url.value)){
+    alert("Veuillez rentrer une url valide (http(s)://URL)")
+    return
+  }
+
+  if(!kbis.value) {
+    alert("Veuillez insérer un fichier")
+    return
+  }
+
   const formData = new FormData()
   formData.append('firstname', firstname.value)
   formData.append('lastname', lastname.value)

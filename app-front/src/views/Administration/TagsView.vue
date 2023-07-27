@@ -30,9 +30,6 @@
             </template>
           </ModalAlert>
         </div>
-        <button v-else
-                class="btn btn-purple btn-md">Ajouter un tunnel &nbsp;<i class="fa-solid fa-arrows-turn-right"></i>
-        </button>
       </div>
     </div>
 

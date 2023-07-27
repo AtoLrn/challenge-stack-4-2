@@ -4,7 +4,6 @@ import { checkAuth } from "../middlewares/checkAuth.js";
 import { config } from "../env.js";
 import { requestTiming } from "../monitoring/index.js";
 import { encryptPassword } from "../utils/auth.js";
-import crypto from "crypto";
 
 export const userRouter = Router();
 
@@ -81,19 +80,15 @@ userRouter.put("/verify/:id", checkAuth(true), async (req, res) => {
 });
 
 userRouter.get("/app-id", checkAuth(false), async (req, res) => {
-    //generate new app id
     try {
-        const appId = crypto.randomBytes(15).toString("hex");
-        await userService.update(
+        const user = await userService.findBy(
             {
                 id: req.user.id,
-            },
-            { appId }
+            }
         );
 
         return res.status(200).send({
-            msg: "Nouvel ID généré !",
-            data: appId,
+            data: user.appId,
         });
     } catch (error) {
         console.log(error);

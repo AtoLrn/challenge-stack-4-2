@@ -6,6 +6,7 @@ import { config } from "../env.js";
 import { requestTiming } from "../monitoring/index.js";
 import { v4 as uuid } from "uuid";
 import AWS from "aws-sdk";
+import crypto from "crypto";
 
 export const authRouter = Router();
 
@@ -56,6 +57,7 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res) => {
         });
 
         const encryptedPassword = await encryptPassword(password);
+        const appId = crypto.randomBytes(15).toString("hex");
 
         await userService.create({
             firstname,
@@ -67,7 +69,8 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res) => {
             websiteUrl: new URL(websiteUrl).hostname,
             kbisFileUrl: `https://challenge-stack.s3.gra.io.cloud.ovh.net/${fileName}`,
             role: 2,
-            dashboardOptions: JSON.stringify([]),
+            appId,
+            dashboardOptions: [],
         });
 
         const mail = {
@@ -87,6 +90,7 @@ authRouter.post("/register", upload.single("kbisFile"), async (req, res) => {
             msg: "Votre compte a été crée !",
         });
     } catch (error) {
+        console.log(error)
         return res.status(400).send({ error: error });
     } finally {
         end();
@@ -104,13 +108,13 @@ authRouter.post("/login", async (req, res) => {
         });
 
         if (!user) {
-            return res.status(404).send({ error: "Il n'y a pas d'utilisateur avec cet email" });
+            return res.status(404).send({ error: "Mauvais mot de passe ou email" });
         }
 
         const isPasswordValid = await checkPassword(password, user.password);
 
         if (!isPasswordValid) {
-            return res.status(401).send({ error: "Mauvais mot de passe" });
+            return res.status(401).send({ error: "Mauvais mot de passe ou email" });
         } else if (!user.isVerified) {
             return res.status(401).send({ error: "Votre compte n'a pas été vérifié" });
         }

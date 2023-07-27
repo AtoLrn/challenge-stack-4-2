@@ -16,7 +16,9 @@ export const handleRequest = async (path, body, useCredentials = true, { method 
         })
     
         if (res.status !== 200) {
-            console.log('ERROR', res.body)
+            const body = await res.json()
+            alert(body.error)
+            console.log('ERROR', body)
             throw new Error('Something went wrong with request')
         }
     
