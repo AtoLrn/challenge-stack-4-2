@@ -107,7 +107,7 @@
         </ModalAlert>
 
       <div class="graph flex flex-col content-ctr">
-        <div class="graph-unit" v-for="option in dashboardOptions" v-if="option"> 
+        <div class="graph-unit" v-for="option in dashboardOptions">
             <div class="kpi flex flex-col content-ctr" v-if="option.representation === 'kpi'">
                 <p class="content">{{ parseKpi(option.type, eventData) }}</p>
                 <p>{{ option.name }}</p>
